@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Онбординг | Robokassa</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23525FFB'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='Arial' font-weight='bold' fill='white'>R</text></svg>">
+<link rel="icon" type="image/png" href="v-rk-32.png">
+<link rel="apple-touch-icon" href="icon_robokassa_black.png">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
   import { getFirestore, collection, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
@@ -306,7 +307,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
 <!-- СТАРТ -->
 <div id="screen-start" class="screen active">
   <div class="start-wrap">
-    <span class="start-logo">Robokassa</span>
+    <img src="logo_robokassa_black.png" alt="Robokassa" style="height:28px;display:block;margin:0 auto 40px;">
     <div class="start-icon">🚀</div>
     <h1>Онбординг-курс</h1>
     <p>Всё что нужно знать менеджеру по продажам — продукты, тарифы, требования, путь клиента. Только открытые источники, только то что поможет в работе.</p>
@@ -370,7 +371,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
 <!-- КУРС -->
 <div id="screen-course" class="screen">
   <div class="course-header">
-    <div class="course-logo">Robokassa</div>
+    <div class="course-logo"><img src="logo_robokassa_black.png" alt="Robokassa" style="height:22px;display:block;"></div>
     <div class="course-progress-wrap">
       <div class="cprog-label"><span id="prog-label">Модуль 1 из 5</span><span id="prog-pct">0%</span></div>
       <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
@@ -2116,7 +2117,7 @@ function showResult(){
 }
 
 // ── HR PASSWORD ──
-var HR_PASSWORD = 'rk2026'; // ← смени пароль здесь
+var HR_PASSWORD = 'rk2026hr'; // ← смени пароль здесь
 
 function askHRPassword(){
   var modal = document.getElementById('hr-password-modal');
