@@ -4,6 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Онбординг | Robokassa</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23525FFB'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-family='Arial' font-weight='bold' fill='white'>R</text></svg>">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzewvuLhDNvFoJeh8VZQAaKpWFjuuVniY",
+    authDomain: "rk-sales-2026.firebaseapp.com",
+    projectId: "rk-sales-2026",
+    storageBucket: "rk-sales-2026.firebasestorage.app",
+    messagingSenderId: "247955813209",
+    appId: "1:247955813209:web:71db1b103222091c759248",
+    measurementId: "G-0CB6ECST31"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose to global scope
+  window._fbDb = db;
+  window._fbCollection = collection;
+  window._fbDoc = doc;
+  window._fbSetDoc = setDoc;
+  window._fbGetDocs = getDocs;
+  window._fbReady = true;
+  console.log('Firestore ready ✓');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--blue:#525FFB;--blue-h:#3D49F0;--bg:#F2F5FA;--white:#FFFFFF;--ok:#0D9F6E;--ok-bg:#EAF8F2;--danger:#D93547;--danger-bg:#FFF1F3;--amber:#A06A00;--amber-bg:#FFF8E6;--purple:#7C3AED;--purple-bg:#F3F0FF;--border:#E2E7F1;--text:#182033;--muted:#6B7394;--r:20px;--r-sm:14px;--shadow:0 10px 30px rgba(29,37,74,0.08);--shadow-sm:0 4px 14px rgba(29,37,74,0.06);--font:'Geologica',sans-serif;}
@@ -64,8 +91,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 .fn.ok{color:var(--ok);}
 .fl{font-size:12px;color:var(--muted);line-height:1.4;}
 .ilist{display:flex;flex-direction:column;gap:8px;}
-.ii{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);line-height:1.55;word-break:break-word;}
-.ii a{color:var(--blue);word-break:normal;}
+.ii{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);line-height:1.6;}
+.ii-body{flex:1;min-width:0;}
+.ii a{color:var(--blue);}
 .dot{width:6px;min-width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:5px;flex-shrink:0;}
 .dot.ok{background:var(--ok);}.dot.amber{background:var(--amber);}.dot.danger{background:var(--danger);}
 .hl{border-radius:var(--r-sm);padding:14px 16px;margin-bottom:10px;}
@@ -218,7 +246,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 .dial-choice.best-d .dial-feedback{display:block;color:#065F46;}
 .dial-choice.bad-d .dial-feedback{display:block;color:#7f1d1d;}
 .dial-choice.ok-d .dial-feedback{display:block;color:#5c3d00;}
-.dial-next-btn{padding:0 24px;height:44px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:none;}
+.dial-next-btn{padding:0 24px;height:44px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:none;margin-top:12px;box-shadow:0 4px 14px rgba(82,95,251,0.3);}
 .dial-finish{display:none;padding:16px;border-radius:var(--r-sm);background:var(--ok-bg);border:1px solid rgba(13,159,110,0.25);text-align:center;margin-top:16px;}
 .dial-finish-title{font-size:14px;font-weight:700;color:var(--ok);margin-bottom:6px;}
 .dial-finish-desc{font-size:12px;color:#065F46;line-height:1.55;margin-bottom:14px;}
@@ -381,24 +409,24 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
 
         <div class="cs"><div class="sh">Что предлагает Robokassa</div>
           <div class="ilist">
-            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--text);font-weight:700;">Приём платежей</a> — 15+ методов на одной платёжной странице по одному договору: карты РФ, СБП, Pay-методы, BNPL, рассрочка, инокарты. Управление методами — через ЛК или поддержку.</div>
-            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/online-check/" target="_blank" style="color:var(--text);font-weight:700;">Онлайн-чеки и фискализация</a> — <a href="https://robokassa.com/online-check/robokassa-online/" target="_blank" style="color:var(--blue);">Robokassa ONLINE</a>, <a href="https://robokassa.com/online-check/robocheck/" target="_blank" style="color:var(--blue);">Робочеки</a>, <a href="https://robokassa.com/online-check/robocheck-smz/" target="_blank" style="color:var(--blue);">Робочеки СМЗ</a></div>
-            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/payments/instrumenty-oplaty/" target="_blank" style="color:var(--text);font-weight:700;">Инструменты продаж</a> — платёжные ссылки, QR-коды, рекурренты, виджеты, Telegram-боты</div>
-            <div class="ii"><span class="dot"></span><strong>130+ интеграций</strong> — CMS, CRM, API. По технической интеграции клиент пользуется <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);font-weight:600;">документацией →</a> Менеджер консультирует по ошибкам на платёжной странице.</div>
-            <div class="ii"><span class="dot ok"></span>Подключение <strong>полностью онлайн</strong>, всё зависит от готовности клиента и пакета документов</div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--text);font-weight:700;">Приём платежей</a> — 15+ методов на одной платёжной странице по одному договору: карты РФ, СБП, Pay-методы, BNPL, рассрочка, инокарты. Управление методами — через ЛК или поддержку.</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><a href="https://robokassa.com/online-check/" target="_blank" style="color:var(--text);font-weight:700;">Онлайн-чеки и фискализация</a> — <a href="https://robokassa.com/online-check/robokassa-online/" target="_blank" style="color:var(--blue);">Robokassa ONLINE</a>, <a href="https://robokassa.com/online-check/robocheck/" target="_blank" style="color:var(--blue);">Робочеки</a>, <a href="https://robokassa.com/online-check/robocheck-smz/" target="_blank" style="color:var(--blue);">Робочеки СМЗ</a></div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><a href="https://robokassa.com/payments/instrumenty-oplaty/" target="_blank" style="color:var(--text);font-weight:700;">Инструменты продаж</a> — платёжные ссылки, QR-коды, рекурренты, виджеты, Telegram-боты</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>130+ интеграций</strong> — CMS, CRM, API. По технической интеграции клиент пользуется <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);font-weight:600;">документацией →</a> Менеджер консультирует по ошибкам на платёжной странице.</div></div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body">Подключение <strong>полностью онлайн</strong> — всё зависит от готовности клиента и пакета документов</div></div>
           </div>
           <div class="hl green mt12"><div class="hl-t">Почему это конкурентное преимущество</div><div class="hl-b">Всё в одном договоре — клиент не собирает несколько интеграций у разных провайдеров. Единая платёжная страница со всеми методами сразу: у конкурентов часто нужно отдельно подключать BNPL, инокарты или Pay-методы через других партнёров. У Robokassa это работает из коробки.</div></div>
         </div>
 
         <div class="cs"><div class="sh">Главный аргумент — НДС</div>
-          <div class="hl green"><div class="hl-t">Почему НДС — это важно</div><div class="hl-b">Robokassa <strong>не облагается НДС</strong>. Банковский эквайринг и многие конкуренты включают НДС (20%) в тарифную ставку. При сравнении нужно смотреть итоговую стоимость, а не голую ставку. Например, 1,8% + НДС = ~2,16% — это уже выше нашего базового тарифа для ряда оборотов.</div></div>
+          <div class="hl green"><div class="hl-t">Почему НДС — это важно</div><div class="hl-b">Robokassa <strong>не облагается НДС</strong>. Банковский эквайринг и многие конкуренты включают НДС (22%) в тарифную ставку. При сравнении нужно смотреть итоговую стоимость, а не голую ставку. Например, 1,8% + НДС 22% = ~2,2% итоговых — это уже выше нашего базового тарифа для ряда оборотов.</div></div>
           <div class="hl blue"><div class="hl-t">Правило сравнения</div><div class="hl-b">Никогда не говори «мы дешевле» без выяснения деталей. Сначала выясни что использует клиент, какой у него оборот. Используй инструмент: <a href="https://rk-sales-dept.github.io/RK-competitor/" target="_blank" style="color:var(--blue);font-weight:700;">сравнение с конкурентами →</a></div></div>
         </div>
 
         <div class="cs"><div class="sh">Что есть только у Robokassa</div>
           <div class="hl blue"><div class="hl-t">Уникальные методы среди крупных провайдеров</div><div class="hl-b">
             • <a href="https://robokassa.com/payments/payment-method/inostrannye-karty/" target="_blank" style="color:var(--blue);font-weight:600;">Инокарты</a> — Visa/MC иностранных банков, включая Беларусь<br>
-            • <a href="https://robokassa.com/payments/payment-method/oplata-chastyami/" target="_blank" style="color:var(--blue);font-weight:600;">Мокка, Яндекс Сплит, Подели</a> — три BNPL по одному договору<br>
+            • <a href="https://robokassa.com/payments/payment-method/oplata-chastyami/" target="_blank" style="color:var(--blue);font-weight:600;">BNPL — три метода по одному договору</a>: Яндекс Сплит, Подели, Мокка<br>
             • <a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--blue);font-weight:600;">Alfa Pay, MTS Pay</a> — есть только у Robokassa<br>
             • <a href="https://robokassa.com/payments/payment-method/rassrochka-i-kredit/" target="_blank" style="color:var(--blue);font-weight:600;">Карта Халва</a> — рассрочка до 500 000 ₽<br>
             Клиент на ЮКассе? Уточни: «Уже подписали договор?» Если ещё сравнивает — Robokassa можно подключить как <strong>дополнение</strong> для недостающих методов.
@@ -420,10 +448,10 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
 
         <div class="cs"><div class="sh">Сайт — знай как свои пять пальцев</div>
           <div class="ilist">
-            <div class="ii"><span class="dot ok"></span><a href="https://robokassa.com/payments/tarify/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/payments/tarify/</a> — тарифы эквайринга</div>
-            <div class="ii"><span class="dot ok"></span><a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/payments/payment-method/</a> — все методы оплаты</div>
-            <div class="ii"><span class="dot ok"></span><a href="https://robokassa.com/how-works/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/how-works/</a> — требования для подключения</div>
-            <div class="ii"><span class="dot ok"></span><a href="https://robokassa.com/online-check/robokassa-online/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/online-check/robokassa-online/</a> — тарифы кассы ONLINE</div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body"><a href="https://robokassa.com/payments/tarify/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/payments/tarify/</a> — тарифы эквайринга</div></div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body"><a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/payments/payment-method/</a> — все методы оплаты</div></div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body"><a href="https://robokassa.com/how-works/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/how-works/</a> — требования для подключения</div></div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body"><a href="https://robokassa.com/online-check/robokassa-online/" target="_blank" style="color:var(--text);font-weight:600;">robokassa.com/online-check/robokassa-online/</a> — тарифы кассы ONLINE</div></div>
           </div>
         </div>
 
@@ -447,7 +475,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
             <div class="q-text"><span class="qnb">1</span>Клиент звонит и говорит: «Смотрел тарифы — у Сбера мне предложили 1,8%, у вас базовая 2,1%. Хочу понять, зачем переплачивать». Что важно сказать в первую очередь?</div>
             <div class="options">
               <div class="option" onclick="sel(this,0,0,false,'Скидку обсуждают после выяснения оборота и ситуации, а не как первый аргумент. Это обесценивает продукт.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«У нас гибкая система — для вас можем сделать индивидуальный тариф»</div><div class="opt-explain"></div></div></div>
-              <div class="option" onclick="sel(this,0,0,true,'Правильно. Тариф Сбера облагается НДС 20%. 1,8% + НДС = ~2,16% — уже выше нашей базовой ставки. Нельзя сравнивать ставки без учёта НДС.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Важный момент — тариф Сбера включает НДС 20%, наш нет. Давайте посчитаем итоговую стоимость»</div><div class="opt-explain"></div></div></div>
+              <div class="option" onclick="sel(this,0,0,true,'Правильно. Тариф Сбера облагается НДС 22%. 1,8% + НДС 22% = ~2,2% итоговых — уже выше нашей базовой ставки. Нельзя сравнивать ставки без учёта НДС.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Важный момент — тариф Сбера включает НДС 22%, наш нет. Давайте посчитаем итоговую стоимость»</div><div class="opt-explain"></div></div></div>
               <div class="option" onclick="sel(this,0,0,false,'Репутация не закрывает возражение по цене. Клиент задал конкретный вопрос — ответить нужно конкретно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Мы работаем 23 года и резиденты Сколково — это говорит о надёжности»</div><div class="opt-explain"></div></div></div>
             </div>
           </div>
@@ -486,7 +514,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
             <div class="options">
               <div class="option" onclick="sel(this,0,4,false,'Слишком агрессивно и голословно. Критиковать конкурента без конкретных аргументов — непрофессионально.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«ЮКасса — не самый надёжный провайдер, у нас стабильность выше»</div><div class="opt-explain"></div></div></div>
               <div class="option" onclick="sel(this,0,4,false,'Пассивная позиция. Можно найти незакрытую потребность — методы которых нет у ЮКассы.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Понятно, тогда вы нас не нуждаетесь — всего хорошего»</div><div class="opt-explain"></div></div></div>
-              <div class="option" onclick="sel(this,0,4,true,'Правильно. Не атакуй конкурента — исследуй. Инокарты, Мокка, AlfaPay, MTSPay есть только у нас. Robokassa можно использовать как дополнение к ЮКассе для недостающих методов.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Хорошо. Скажите — инокарты и Мокка у вас там подключены? Эти методы есть только у нас, и мы часто работаем как дополнение»</div><div class="opt-explain"></div></div></div>
+              <div class="option" onclick="sel(this,0,4,true,'Правильно. Не атакуй конкурента — исследуй. Инокарты, Яндекс Сплит, AlfaPay, MTSPay есть только у нас. Robokassa можно использовать как дополнение к ЮКассе для недостающих методов.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Хорошо. Скажите — инокарты и BNPL у вас там подключены? Яндекс Сплит, AlfaPay, MTSPay есть только у нас, и мы часто работаем как дополнение»</div><div class="opt-explain"></div></div></div>
             </div>
           </div>
 
@@ -543,7 +571,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
           <div class="case-option" onclick="selectCase(this,'1','B')" id="case-1-B">
             <div class="case-opt-letter">B</div>
             <div>
-              <div class="case-opt-text">«Важный момент: тариф Сбера включает НДС 20%, наш — нет. Их 1,8% + НДС = ~2,16% итоговых. Плюс у вас оборот 400к — это тариф "Оптимальный", ставка ниже базовой. Посчитаем реальную разницу прямо сейчас?»</div>
+              <div class="case-opt-text">«Важный момент: тариф Сбера включает НДС 22%, наш — нет. Их 1,8% + НДС = ~2,2% итоговых. Плюс у вас оборот 400к — это тариф "Оптимальный", ставка ниже базовой. Посчитаем реальную разницу прямо сейчас?»</div>
               <div class="case-opt-explain">Лучший ответ. Вскрыл скрытое сравнение (НДС), персонализировал под оборот и пригласил к действию прямо в разговоре — не откладывая.</div>
             </div>
           </div>
@@ -672,7 +700,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
       <div class="module-card-head">
         <div class="mod-badge m2">Модуль 2 · Продукты и методы оплаты</div>
         <h2>Продукты и методы оплаты</h2>
-        <p>15+ методов, логика выбора, BNPL, инокарты, рекурренты, Мокка — когда что предлагать и почему.</p>
+        <p>15+ методов, логика выбора, BNPL (Яндекс Сплит, Подели, Мокка), инокарты, рекурренты — когда что предлагать и почему.</p>
       </div>
 
       <!-- ШАГ 1 -->
@@ -684,13 +712,13 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
       <div class="step-content open" id="sc-2-1">
         <div class="cs"><div class="sh">15+ методов по одному договору</div>
           <div class="ilist">
-            <div class="ii"><span class="dot"></span><strong>Карты РФ</strong> — Visa, Mastercard, Мир</div>
-            <div class="ii"><span class="dot"></span><strong>СБП</strong> — Система быстрых платежей, комиссия ниже эквайринга</div>
-            <div class="ii"><span class="dot"></span><strong>Pay-методы</strong> — SberPay, MirPay, T-Pay, Яндекс Пэй, Alfa Pay, MTS Pay</div>
-            <div class="ii"><span class="dot"></span><strong>BNPL</strong> — Яндекс Сплит, Подели, <strong>Мокка</strong> (без первого взноса, без документов)</div>
-            <div class="ii"><span class="dot"></span><strong>Рассрочка и кредит</strong> — ОТП-Банк, Карта Халва (лимит до 500 000 ₽)</div>
-            <div class="ii"><span class="dot"></span><strong>Инокарты</strong> — Visa, Mastercard, UnionPay иностранных банков (включая Беларусь)</div>
-            <div class="ii"><span class="dot"></span><strong>ЮMoney</strong> — кошелёк</div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Карты РФ</strong> — Visa, Mastercard, Мир</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>СБП</strong> — Система быстрых платежей, комиссия ниже эквайринга</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Pay-методы</strong> — SberPay, MirPay, T-Pay, Яндекс Пэй, Alfa Pay, MTS Pay</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>BNPL</strong> — <a href="https://robokassa.com/payments/payment-method/oplata-chastyami/" target="_blank" style="color:var(--blue);">Яндекс Сплит, Подели, Мокка</a> — оплата частями, повышает конверсию при высоком чеке</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Рассрочка и кредит</strong> — ОТП-Банк, Карта Халва (лимит до 500 000 ₽)</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Инокарты</strong> — Visa, Mastercard, UnionPay иностранных банков (включая Беларусь)</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>ЮMoney</strong> — кошелёк</div></div>
           </div>
           <div class="hl blue mt12"><div class="hl-t">Как это работает для клиента</div><div class="hl-b">Все методы доступны на единой платёжной странице — ничего не нужно интегрировать отдельно. Подключить или отключить конкретный метод можно <strong>через личный кабинет</strong> или обратившись в <strong>поддержку</strong>.</div></div>
         </div>
@@ -698,7 +726,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
           <table class="ct">
             <thead><tr><th>Ситуация клиента</th><th>Что предложить</th><th>Почему</th></tr></thead>
             <tbody>
-              <tr><td>Высокий чек (от 5 000 ₽), низкая конверсия</td><td>BNPL (Сплит, Подели, Мокка)</td><td>Покупатель видит 1–2к/мес вместо полной суммы</td></tr>
+              <tr><td>Высокий чек (от 5 000 ₽), низкая конверсия</td><td>BNPL (Яндекс Сплит, Подели, Мокка)</td><td>Покупатель видит 1–2к/мес вместо полной суммы</td></tr>
               <tr><td>Клиенты из-за рубежа</td><td>Инокарты</td><td>Visa/MC иностранных банков — уникальный метод</td></tr>
               <tr><td>Подписка / регулярный платёж</td><td>Рекурренты</td><td>Автосписание без повторного ввода карты</td></tr>
               <tr><td>Хочет снизить свою комиссию</td><td>СБП</td><td>Ставка по СБП ниже эквайринга</td></tr>
@@ -708,11 +736,11 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
         </div>
         <div class="cs"><div class="sh">Инструменты оплаты</div>
           <div class="ilist">
-            <div class="ii"><span class="dot"></span><strong>Платёжная ссылка</strong> — разовая или многоразовая, для соцсетей и мессенджеров</div>
-            <div class="ii"><span class="dot"></span><strong>QR-код</strong> — для офлайн-точек и мероприятий</div>
-            <div class="ii"><span class="dot"></span><strong>Виджет / форма</strong> — встраивается на сайт</div>
-            <div class="ii"><span class="dot"></span><strong>Telegram-бот</strong> — приём платежей прямо в боте</div>
-            <div class="ii"><span class="dot"></span><strong>API</strong> — для собственных интеграций разработчиком клиента по <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);">документации</a></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Платёжная ссылка</strong> — разовая или многоразовая, для соцсетей и мессенджеров</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>QR-код</strong> — для офлайн-точек и мероприятий</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Виджет / форма</strong> — встраивается на сайт</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>Telegram-бот</strong> — приём платежей прямо в боте</div></div>
+            <div class="ii"><span class="dot"></span><div class="ii-body"><strong>API</strong> — для собственных интеграций разработчиком клиента по <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);">документации</a></div></div>
           </div>
         </div>
         <div class="cs"><div class="sh">Важно запомнить</div>
@@ -739,7 +767,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
             <div class="q-text"><span class="qnb">1</span>Клиент продаёт онлайн-курсы по 15 000 ₽. Говорит: «Хочу чтобы покупатели чаще оформляли заказ, а не уходили думать». Что предложишь?</div>
             <div class="options">
               <div class="option" onclick="sel(this,1,0,false,'СБП снижает комиссию для продавца, но не влияет на решение покупателя. При высоком чеке покупатель уходит из-за суммы — СБП её не снижает.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Подключить СБП — там ниже комиссия и покупателям удобнее</div><div class="opt-explain"></div></div></div>
-              <div class="option" onclick="sel(this,1,0,true,'Верно! BNPL при чеке 15к превращает 15 000 ₽ в 3–4к в месяц. Покупатель решается быстрее — это прямой инструмент роста конверсии.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Подключить BNPL (Яндекс Сплит, Подели или Мокку) — оплата частями снижает психологический барьер</div><div class="opt-explain"></div></div></div>
+              <div class="option" onclick="sel(this,1,0,true,'Верно! BNPL при чеке 15к превращает 15 000 ₽ в 3–4к в месяц. Покупатель решается быстрее — это прямой инструмент роста конверсии.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Подключить BNPL (Яндекс Сплит или Подели) — оплата частями снижает психологический барьер</div><div class="opt-explain"></div></div></div>
               <div class="option" onclick="sel(this,1,0,false,'Рекурренты — для автоматических регулярных платежей (подписок). Разовая покупка курса — другая ситуация.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Настроить рекурренты — тогда платёж спишется автоматически</div><div class="opt-explain"></div></div></div>
             </div>
           </div>
@@ -751,7 +779,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
               <div class="option multi" onclick="selMulti(this,1,1,1,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">SberPay</div><div class="opt-explain">SberPay доступен у многих провайдеров, в том числе ЮКасса, CloudPayments и других.</div></div></div>
               <div class="option multi" onclick="selMulti(this,1,1,2,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">MTS Pay</div><div class="opt-explain"></div></div></div>
               <div class="option multi" onclick="selMulti(this,1,1,3,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">МирPay</div><div class="opt-explain">МирPay доступен у многих провайдеров — ЮКасса, AlfaBank, CloudPayments и других.</div></div></div>
-              <div class="option multi" onclick="selMulti(this,1,1,4,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Мокка (BNPL без первого взноса)</div><div class="opt-explain"></div></div></div>
+              <div class="option multi" onclick="selMulti(this,1,1,4,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Мокка</div><div class="opt-explain">Мокка доступна через Robokassa, но не является уникальным преимуществом в ряду с Яндекс Сплит и Подели как аргумент в продажах.</div></div></div>
             </div>
           </div>
 
@@ -893,7 +921,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
             <div class="dial-choices" id="dc-2-2">
               <div class="dial-choice" onclick="selectDial(this,'2',2,'A')" id="dial-2-2-A">
                 <div class="dial-choice-letter">A</div>
-                <div>«Клиент: "Да, бывает. Чек у нас 4–5 тысяч."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«При чеке 4–5к хорошо работает оплата частями — Яндекс Сплит, Подели или Мокка. Покупатель видит 1–1,5к в месяц вместо 5к сразу. Снижает барьер.»
+                <div>«Клиент: "Да, бывает. Чек у нас 4–5 тысяч."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«При чеке 4–5к хорошо работает оплата частями — Яндекс Сплит или Подели. Покупатель видит 1–1,5к в месяц вместо 5к сразу. Снижает барьер.»
                 <div class="dial-feedback">Отлично! Боль → инструмент → механика на языке покупателя. Правильная структура.</div></div>
               </div>
               <div class="dial-choice" onclick="selectDial(this,'2',2,'B')" id="dial-2-2-B">
@@ -985,10 +1013,10 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
         </div>
         <div class="cs"><div class="sh">Логика выбора</div>
           <div class="ilist">
-            <div class="ii"><span class="dot ok"></span><strong>Всегда начинай с ONLINE</strong> — приоритет №1</div>
-            <div class="ii"><span class="dot amber"></span><strong>Робочеки</strong> — если клиент говорит «дорого». Сначала уточни с чем сравнивает</div>
-            <div class="ii"><span class="dot amber"></span><strong>Робочеки СМЗ</strong> — только для самозанятых и ИП на НПД</div>
-            <div class="ii"><span class="dot blue"></span><strong>Касса подключается после активации магазина</strong>, не до</div>
+            <div class="ii"><span class="dot ok"></span><div class="ii-body"><strong>Всегда начинай с ONLINE</strong> — приоритет №1</div></div>
+            <div class="ii"><span class="dot amber"></span><div class="ii-body"><strong>Робочеки</strong> — если клиент говорит «дорого». Сначала уточни с чем сравнивает</div></div>
+            <div class="ii"><span class="dot amber"></span><div class="ii-body"><strong>Робочеки СМЗ</strong> — только для самозанятых и ИП на НПД</div></div>
+            <div class="ii"><span class="dot blue"></span><div class="ii-body"><strong>Касса подключается после активации магазина</strong>, не до</div></div>
           </div>
         </div>
         <div style="margin-top:20px;text-align:center;">
@@ -1563,23 +1591,30 @@ function saveProgress(){
     done: S.done.slice(),
     sessionKey: SESSION_KEY
   };
+  // Save to localStorage as fallback
   try {
     var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
-    // remove old session for same name+key
     all = all.filter(function(r){return r.sessionKey !== SESSION_KEY;});
     all.push(data);
     localStorage.setItem('rk_analytics', JSON.stringify(all));
   } catch(e){}
+  // Save to Firestore if available
+  if(window._fbReady && window._fbDb){
+    try {
+      var docRef = window._fbDoc(window._fbDb, 'onboarding_results', SESSION_KEY);
+      window._fbSetDoc(docRef, data)
+        .then(function(){ console.log('Saved to Firestore ✓'); })
+        .catch(function(e){ console.warn('Firestore save error:', e); });
+    } catch(e){ console.warn('Firestore error:', e); }
+  }
 }
 
 // Add analytics link to start screen
 function maybeShowAnalyticsLink(){
+  // Always show analytics link (HR can always open it)
   try {
-    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
-    if(all.length > 0){
-      var el = document.getElementById('analytics-link');
-      if(el) el.style.display = 'inline-flex';
-    }
+    var el = document.getElementById('analytics-link');
+    if(el) el.style.display = 'inline-flex';
   } catch(e){}
 }
 
@@ -1589,8 +1624,12 @@ function showAnalytics(){
 }
 
 function renderAnalytics(filter){
-  try {
-    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+  var container = document.getElementById('analytics-content');
+  if(!container) return;
+  container.innerHTML = '<div class="an-empty" style="padding:32px;text-align:center;"><div style="font-size:24px;margin-bottom:8px;">⏳</div>Загружаем данные...</div>';
+
+  function processRecords(all){
+    try {
     // dedupe: keep latest per name
     var byName = {};
     all.forEach(function(r){ byName[r.name] = r; });
@@ -1703,7 +1742,38 @@ function renderAnalytics(filter){
     
     container.innerHTML = html;
   } catch(e){
-    document.getElementById('analytics-content').innerHTML = '<div class="an-empty">Ошибка загрузки данных.</div>';
+    container.innerHTML = '<div class="an-empty">Ошибка загрузки данных.</div>';
+  }
+  } // end processRecords
+
+  // Try Firestore first, fallback to localStorage
+  if(window._fbReady && window._fbDb){
+    window._fbGetDocs(window._fbCollection(window._fbDb, 'onboarding_results'))
+      .then(function(snapshot){
+        var all = [];
+        snapshot.forEach(function(d){ all.push(d.data()); });
+        // Merge with localStorage (catch any local-only records)
+        try {
+          var local = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+          local.forEach(function(r){
+            if(!all.find(function(x){return x.sessionKey===r.sessionKey;})) all.push(r);
+          });
+        } catch(e){}
+        processRecords(all);
+      })
+      .catch(function(e){
+        console.warn('Firestore read error:', e);
+        try {
+          var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+          processRecords(all);
+        } catch(err){ container.innerHTML = '<div class="an-empty">Ошибка загрузки.</div>'; }
+      });
+  } else {
+    // No Firestore — use localStorage only
+    try {
+      var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+      processRecords(all);
+    } catch(e){ container.innerHTML = '<div class="an-empty">Ошибка загрузки.</div>'; }
   }
 }
 
