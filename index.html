@@ -64,7 +64,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 .fn.ok{color:var(--ok);}
 .fl{font-size:12px;color:var(--muted);line-height:1.4;}
 .ilist{display:flex;flex-direction:column;gap:8px;}
-.ii{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);line-height:1.55;}
+.ii{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);line-height:1.55;word-break:break-word;}
+.ii a{color:var(--blue);word-break:normal;}
 .dot{width:6px;min-width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:5px;flex-shrink:0;}
 .dot.ok{background:var(--ok);}.dot.amber{background:var(--amber);}.dot.danger{background:var(--danger);}
 .hl{border-radius:var(--r-sm);padding:14px 16px;margin-bottom:10px;}
@@ -241,6 +242,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 .rb-bar-wrap{width:80px;height:6px;background:var(--border);border-radius:999px;overflow:hidden;}
 .rb-bar{height:100%;border-radius:999px;transition:width .5s ease;}
 .mt8{margin-top:8px;}.mt12{margin-top:12px;}.mt16{margin-top:16px;}
+/* ANALYTICS */
+.an-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px;}
+.an-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.an-name{font-size:15px;font-weight:700;}
+.an-date{font-size:11px;color:var(--muted);}
+.an-score{font-size:22px;font-weight:700;}
+.an-score.pass{color:var(--ok);}.an-score.fail{color:var(--danger);}
+.an-mods{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;}
+.an-mod{background:var(--bg);border-radius:10px;padding:10px;text-align:center;}
+.an-mod-n{font-size:14px;font-weight:700;margin-bottom:3px;}
+.an-mod-l{font-size:10px;color:var(--muted);}
+.an-errors{margin-top:12px;}
+.an-err-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.an-err-item{background:var(--danger-bg);border:1px solid rgba(217,53,71,0.15);border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px;line-height:1.5;}
+.an-err-item strong{color:var(--danger);}
+.an-err-q{color:var(--text);margin-bottom:4px;}
+.an-err-chose{color:var(--danger);}
+.an-err-right{color:var(--ok);}
+.an-empty{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
+.an-filter{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.an-filter-btn{padding:6px 16px;border-radius:999px;border:1.5px solid var(--border);background:var(--white);font-family:var(--font);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;}
+.an-filter-btn.active{border-color:var(--blue);background:rgba(82,95,251,0.08);color:var(--blue);}
+.an-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.an-sum-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;text-align:center;}
+.an-sum-n{font-size:20px;font-weight:700;color:var(--blue);margin-bottom:3px;}
+.an-sum-l{font-size:10px;color:var(--muted);}
+input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,251,0.1);}
 .res-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--white);}
 .res-link:hover{color:var(--blue);border-color:var(--blue);}
 </style>
@@ -260,7 +288,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
       <div class="start-stat"><div class="start-stat-n">32</div><div class="start-stat-l">вопроса</div></div>
       <div class="start-stat"><div class="start-stat-n">8/10</div><div class="start-stat-l">финальный зачёт</div></div>
     </div>
-    <button class="btn-primary" onclick="startCourse()">Начать курс →</button>
+    <button class="btn-primary" onclick="showNameScreen()">Начать курс →</button>
+    <div style="margin-top:16px;">
+      <a id="analytics-link" href="#" onclick="showAnalytics();return false;" style="display:none;font-size:12px;color:var(--muted);text-decoration:none;gap:6px;" class="res-link">📊 Аналитика по сотрудникам (HR) →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ЭКРАН ВВОДА ИМЕНИ -->
+<div id="screen-name" class="screen">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:32px 20px;">
+    <div style="max-width:420px;width:100%;text-align:center;">
+      <div style="width:56px;height:56px;background:rgba(82,95,251,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;">👤</div>
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;">Представься</h2>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px;">Это нужно чтобы твои результаты сохранились и HR-менеджер мог разобрать ошибки с тобой.</p>
+      <input id="employee-name" type="text" placeholder="Имя и фамилия" style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:14px;color:var(--text);background:var(--white);outline:none;margin-bottom:12px;" oninput="document.getElementById('btn-start-named').disabled=this.value.trim().length<2">
+      <button id="btn-start-named" class="btn-primary" style="width:100%;justify-content:center;" onclick="startWithName()" disabled>Начать обучение →</button>
+    </div>
+  </div>
+</div>
+
+<!-- АНАЛИТИКА (только для HR) -->
+<div id="screen-analytics" class="screen">
+  <div style="max-width:800px;margin:0 auto;padding:32px 20px 64px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <h1 style="font-size:22px;font-weight:700;margin-bottom:4px;">Аналитика онбординга</h1>
+        <p style="font-size:13px;color:var(--muted);">Подробные результаты по каждому сотруднику</p>
+      </div>
+      <button class="btn-secondary" onclick="show('screen-start')">← Назад</button>
+    </div>
+    <div id="analytics-content">
+      <div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">Загрузка данных...</div>
+    </div>
   </div>
 </div>
 
@@ -321,12 +381,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 
         <div class="cs"><div class="sh">Что предлагает Robokassa</div>
           <div class="ilist">
-            <div class="ii"><span class="dot"></span><strong>Приём платежей</strong> — 15+ методов по одному договору: карты РФ, СБП, Pay-методы, BNPL, рассрочка, инокарты</div>
-            <div class="ii"><span class="dot"></span><strong>Онлайн-чеки и фискализация</strong> — Robokassa ONLINE, Робочеки, Робочеки СМЗ</div>
-            <div class="ii"><span class="dot"></span><strong>Инструменты продаж</strong> — платёжные ссылки, QR-коды, рекурренты, виджеты, Telegram-боты</div>
-            <div class="ii"><span class="dot"></span><strong>130+ интеграций</strong> — CMS, CRM, API. По техническим вопросам интеграции клиент пользуется <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);">документацией</a>. Менеджер консультирует по ошибкам платёжной страницы в процессе оплаты.</div>
+            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/payments/payment-method/" target="_blank" style="color:var(--text);font-weight:700;">Приём платежей</a> — 15+ методов на одной платёжной странице по одному договору: карты РФ, СБП, Pay-методы, BNPL, рассрочка, инокарты. Управление методами — через ЛК или поддержку.</div>
+            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/online-check/" target="_blank" style="color:var(--text);font-weight:700;">Онлайн-чеки и фискализация</a> — <a href="https://robokassa.com/online-check/robokassa-online/" target="_blank" style="color:var(--blue);">Robokassa ONLINE</a>, <a href="https://robokassa.com/online-check/robocheck/" target="_blank" style="color:var(--blue);">Робочеки</a>, <a href="https://robokassa.com/online-check/robocheck-smz/" target="_blank" style="color:var(--blue);">Робочеки СМЗ</a></div>
+            <div class="ii"><span class="dot"></span><a href="https://robokassa.com/payments/instrumenty-oplaty/" target="_blank" style="color:var(--text);font-weight:700;">Инструменты продаж</a> — платёжные ссылки, QR-коды, рекурренты, виджеты, Telegram-боты</div>
+            <div class="ii"><span class="dot"></span><strong>130+ интеграций</strong> — CMS, CRM, API. По технической интеграции клиент пользуется <a href="https://docs.robokassa.ru" target="_blank" style="color:var(--blue);font-weight:600;">документацией →</a> Менеджер консультирует по ошибкам на платёжной странице.</div>
             <div class="ii"><span class="dot ok"></span>Подключение <strong>полностью онлайн</strong>, всё зависит от готовности клиента и пакета документов</div>
           </div>
+          <div class="hl green mt12"><div class="hl-t">Почему это конкурентное преимущество</div><div class="hl-b">Всё в одном договоре — клиент не собирает несколько интеграций у разных провайдеров. Единая платёжная страница со всеми методами сразу: у конкурентов часто нужно отдельно подключать BNPL, инокарты или Pay-методы через других партнёров. У Robokassa это работает из коробки.</div></div>
         </div>
 
         <div class="cs"><div class="sh">Главный аргумент — НДС</div>
@@ -520,7 +581,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
       <div class="step-content" id="sc-1-4">
         <div class="dial-scenario">
           <div class="dial-scenario-label">Сценарий — исходящий звонок</div>
-          <div class="dial-scenario-text">Клиент зарегистрировался, заполнил анкету — ИП, продаёт товары онлайн. Завис на этапе «заполнил анкету». Ты звонишь первым. Задача: установить контакт, выявить потребность, сдвинуть к следующему шагу.</div>
+          <div class="dial-scenario-text">Клиент зарегистрировался, заполнил анкету — ИП, продаёт товары онлайн. Завис на этапе «заполнил анкету». Ты звонишь первым. Задача: установить контакт, выявить что стопорит, помочь сдвинуться к активации и первому платежу.</div>
         </div>
         <div class="dial-progress-bar">
           <div class="dial-step-dot active-d" id="ddot-1-1"></div>
@@ -631,6 +692,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
             <div class="ii"><span class="dot"></span><strong>Инокарты</strong> — Visa, Mastercard, UnionPay иностранных банков (включая Беларусь)</div>
             <div class="ii"><span class="dot"></span><strong>ЮMoney</strong> — кошелёк</div>
           </div>
+          <div class="hl blue mt12"><div class="hl-t">Как это работает для клиента</div><div class="hl-b">Все методы доступны на единой платёжной странице — ничего не нужно интегрировать отдельно. Подключить или отключить конкретный метод можно <strong>через личный кабинет</strong> или обратившись в <strong>поддержку</strong>.</div></div>
         </div>
         <div class="cs"><div class="sh">Когда что предлагать — логика выбора</div>
           <table class="ct">
@@ -748,8 +810,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
       <div class="step-content" id="sc-2-3">
         <div class="case-wrap">
           <div class="case-label">Ситуация — исходящий звонок</div>
-          <div class="case-text">Клиент — интернет-магазин мебели, средний чек 35 000 ₽, оборот ~1,5 млн ₽/мес. Уже подключены карты РФ и СБП. В разговоре говорит: «Всё работает, пока ничего дополнительного не нужно».</div>
-          <div class="case-context">Из CRM: конверсия на оплату 3,2%, много «брошенных корзин».</div>
+          <div class="case-text">Клиент — интернет-магазин мебели, средний чек 35 000 ₽. Уже подключены карты РФ и СБП. Ты звонишь с целью помочь довести магазин до первого оборота. В разговоре говорит: «Всё работает, пока ничего дополнительного не нужно».</div>
+          <div class="case-context">В разговоре клиент упоминает: «Покупатели смотрят, добавляют в корзину, но до оплаты доходят не все».</div>
         </div>
         <div class="sh" style="margin-bottom:12px;">Как продолжаешь разговор?</div>
         <div class="case-options" id="case-opts-2">
@@ -793,7 +855,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
       <div class="step-content" id="sc-2-4">
         <div class="dial-scenario">
           <div class="dial-scenario-label">Сценарий — исходящий звонок</div>
-          <div class="dial-scenario-text">Клиент — интернет-магазин одежды, подключён месяц назад (карты + СБП). Из CRM: средний чек 4–5к, конверсия 4,1%. Ты звонишь расширить использование.</div>
+          <div class="dial-scenario-text">Клиент — интернет-магазин одежды, подключён месяц назад (карты + СБП). Активен, но первого платежа ещё нет. Ты звонишь помочь дойти до первого оборота — выясняешь что стопорит и помогаешь разобраться.</div>
         </div>
         <div class="dial-progress-bar">
           <div class="dial-step-dot active-d" id="ddot-2-1"></div>
@@ -803,7 +865,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
         <div id="dial-2-body">
           <div id="dial-turn-2-1">
             <div class="dial-messages">
-              <div class="dial-msg-wrap"><div class="dial-label client-l">Клиент</div><div class="dial-msg client">Да, работает нормально. Но хотелось бы чтобы больше покупателей доводили до оплаты.</div></div>
+              <div class="dial-msg-wrap"><div class="dial-label client-l">Клиент</div><div class="dial-msg client">Да, подключил. Но покупатели пока до оплаты не доходят — непонятно что мешает.</div></div>
             </div>
             <div class="sh" style="margin-bottom:10px;">Твой ответ:</div>
             <div class="dial-choices" id="dc-2-1">
@@ -853,8 +915,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
             <div class="dial-choices" id="dc-2-3">
               <div class="dial-choice" onclick="selectDial(this,'2',3,'A')" id="dial-2-3-A">
                 <div class="dial-choice-letter">A</div>
-                <div>«Клиент: "Интересно. А сложно это технически подключить?"»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Если уже есть интеграция — это дополнительный метод по той же схеме. Разработчику понадобится документация на docs.robokassa.ru. Если возникнут вопросы на платёжной странице — поможем разобраться. Договорились попробовать?»
-                <div class="dial-feedback">Отлично — конкретный ответ, указал на документацию, обозначил нашу роль (не интегратор, а консультант по ошибкам), зафиксировал следующий шаг.</div></div>
+                <div>«Клиент: "Интересно. А сложно это технически подключить?"»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Методы оплаты уже есть на платёжной странице — они не подключаются отдельно. Нужный метод можно включить через личный кабинет или написать нам в поддержку. Если возникнут ошибки на платёжной странице в процессе оплаты — обращайтесь. Договорились?»
+                <div class="dial-feedback">Отлично. Платёжные методы — уже на платёжной странице, подключить/отключить можно через ЛК или обратившись в поддержку. По технической части — документация. По ошибкам на платёжной странице — помогаем мы. Правильная расстановка ролей.</div></div>
               </div>
               <div class="dial-choice" onclick="selectDial(this,'2',3,'B')" id="dial-2-3-B">
                 <div class="dial-choice-letter">B</div>
@@ -880,13 +942,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
     <!-- КОНЕЦ МОДУЛЯ 2 -->
 
     <!-- ══════ МОДУЛИ 3–5 ══════ -->
+    <!-- ══════ МОДУЛЬ 3 ══════ -->
     <div class="module-card" id="mod-3" style="display:none">
       <div class="module-card-head">
         <div class="mod-badge m3">Модуль 3 · Кассовые решения</div>
         <h2>Кассовые решения</h2>
         <p>Robokassa ONLINE, Робочеки, Робочеки СМЗ — кому что подходит, как выбрать кассу и фискальный накопитель.</p>
       </div>
-      <div class="module-content">
+      <!-- ШАГ 1 -->
+      <div class="step-header">
+        <div class="step-num active" id="sn-3-1">1</div>
+        <div class="step-title-wrap"><div class="step-title">📖 Изучи материал</div><div class="step-sub">Три кассовых решения, тарифы ONLINE, логика выбора</div></div>
+        <div class="step-badge active-b" id="sb-badge-3-1">Активно</div>
+      </div>
+      <div class="step-content open" id="sc-3-1">
         <div class="cs"><div class="sh">Три решения — разные ситуации</div>
           <table class="ct">
             <thead><tr><th>Параметр</th><th>ONLINE</th><th>Робочеки</th><th>Робочеки СМЗ</th></tr></thead>
@@ -899,7 +968,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
               <tr><td>ОФД</td><td><span class="tick">✓ Бесплатно</span></td><td>Не нужен</td><td>Не нужен</td></tr>
             </tbody>
           </table>
-          <div class="hl blue mt12"><div class="hl-t">О маркировке</div><div class="hl-b">Robokassa ONLINE — автоматическая передача данных в Честный ЗНАК. Робочеки — маркировку можно вносить вручную, это вопрос удобства реализации. Упоминай маркировку <strong>только если клиент сам сказал</strong> что продаёт маркированные товары.</div></div>
+          <div class="hl blue mt12"><div class="hl-t">О маркировке</div><div class="hl-b">ONLINE — автоматическая передача в Честный ЗНАК. Робочеки — маркировку можно вносить вручную. Упоминай только если клиент сам сказал что продаёт маркированные товары.</div></div>
         </div>
         <div class="cs"><div class="sh">Тарифы Robokassa ONLINE</div>
           <div class="fact-grid">
@@ -910,121 +979,455 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
           </div>
           <div class="hl green mt12"><div class="hl-t">ОФД включён бесплатно на весь срок аренды</div><div class="hl-b">При переходе из другого сервиса — регистрация кассы в ФНС бесплатно. ФН покупается отдельно.</div></div>
         </div>
-        <div class="cs"><div class="sh">Какой фискальный накопитель выбрать</div>
+        <div class="cs"><div class="sh">Какой фискальный накопитель</div>
           <div class="hl green"><div class="hl-t">ФН на 36 месяцев — 18 500 ₽</div><div class="hl-b">Для бизнеса на <strong>УСН, ПСН, ЕСХН, АУСН</strong> — самый распространённый случай.</div></div>
-          <div class="hl amber"><div class="hl-t">ФН на 15 месяцев — 12 500 ₽</div><div class="hl-b">Для бизнеса на <strong>ОСНО</strong>, или тех кто совмещает ОСНО со спецрежимом.</div></div>
+          <div class="hl amber"><div class="hl-t">ФН на 15 месяцев — 12 500 ₽</div><div class="hl-b">Для бизнеса на <strong>ОСНО</strong>, или совмещении ОСНО со спецрежимом.</div></div>
         </div>
-        <div class="cs"><div class="sh">Логика выбора — запомни</div>
+        <div class="cs"><div class="sh">Логика выбора</div>
           <div class="ilist">
-            <div class="ii"><span class="dot ok"></span><strong>Всегда начинай с ONLINE</strong> — приоритетное решение №1</div>
-            <div class="ii"><span class="dot amber"></span><strong>Робочеки</strong> — только если клиент говорит «ONLINE дорого». Сначала уточни с чем сравнивает — у конкурентов часто +1,5% к каждому чеку</div>
+            <div class="ii"><span class="dot ok"></span><strong>Всегда начинай с ONLINE</strong> — приоритет №1</div>
+            <div class="ii"><span class="dot amber"></span><strong>Робочеки</strong> — если клиент говорит «дорого». Сначала уточни с чем сравнивает</div>
             <div class="ii"><span class="dot amber"></span><strong>Робочеки СМЗ</strong> — только для самозанятых и ИП на НПД</div>
-            <div class="ii"><span class="dot blue"></span><strong>Важно:</strong> касса выбирается и подключается <strong>после активации магазина</strong>, не до</div>
+            <div class="ii"><span class="dot blue"></span><strong>Касса подключается после активации магазина</strong>, не до</div>
           </div>
         </div>
+        <div style="margin-top:20px;text-align:center;">
+          <button class="btn-primary" onclick="unlockStep(3,2)">Материал изучен — к тесту →</button>
+        </div>
       </div>
-      <div class="test-section" style="padding:24px;">
+      <!-- ШАГ 2: ТЕСТ -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-3-2">2</div>
+        <div class="step-title-wrap"><div class="step-title">✅ Проверь себя</div><div class="step-sub">6 вопросов — нужно 5 из 6</div></div>
+        <div class="step-badge locked-b" id="sb-badge-3-2">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-3-2">
         <div class="test-header"><h3>Тест — Модуль 3</h3><div class="test-pass-info">Проходной балл: 5 из 6</div></div>
         <div id="questions-3">
-          <div class="question"><div class="q-text"><span class="qnb">1</span>Клиент — самозанятый репетитор. Какое кассовое решение предложишь первым делом?</div><div class="options">
-            <div class="option" onclick="sel(this,2,0,false,'ONLINE — для ИП и ЮЛ на традиционных системах налогообложения. Самозанятый платит НПД — это другой режим.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Robokassa ONLINE — лучшее решение для всех</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,0,false,'Робочеки — для ИП и ЮЛ на агентской схеме. Самозанятый не подходит под эту категорию.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Робочеки — бесплатно и удобно</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,0,true,'Верно! Робочеки СМЗ — специально для самозанятых и ИП на НПД (422-ФЗ). Бесплатно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Робочеки СМЗ — для самозанятых и ИП на НПД</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">1</span>Клиент — самозанятый репетитор. Какое кассовое решение предложишь?</div><div class="options">
+            <div class="option" onclick="sel(this,2,0,false,'ONLINE — для ИП и ЮЛ на традиционных СНО. Самозанятый платит НПД.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Robokassa ONLINE</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,0,false,'Робочеки — для ИП и ЮЛ. Самозанятый не подходит.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Робочеки</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,0,true,'Верно. Робочеки СМЗ — специально для самозанятых и ИП на НПД (422-ФЗ).')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Робочеки СМЗ — для самозанятых и ИП на НПД</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">2</span>Клиент на ОСНО хочет Robokassa ONLINE. Какой фискальный накопитель нужен?</div><div class="options">
-            <div class="option" onclick="sel(this,2,1,true,'Верно! ФН 15 месяцев — для ОСНО или совмещения ОСНО со спецрежимом.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">ФН на 15 месяцев — 12 500 ₽</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,1,false,'ФН 36 месяцев — для УСН, ПСН, ЕСХН, АУСН. ОСНО требует 15-месячный накопитель.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">ФН на 36 месяцев — 18 500 ₽</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,1,false,'Для ОСНО есть конкретное требование — 15 месяцев. Выбор не произвольный.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Любой — для ОСНО нет ограничений</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">2</span>Клиент на ОСНО хочет ONLINE. Какой ФН нужен?</div><div class="options">
+            <div class="option" onclick="sel(this,2,1,true,'Верно. ФН 15 месяцев — для ОСНО.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">ФН на 15 месяцев — 12 500 ₽</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,1,false,'ФН 36 месяцев — для УСН, ПСН, ЕСХН, АУСН.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">ФН на 36 месяцев — 18 500 ₽</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,1,false,'Для ОСНО — конкретно 15 месяцев.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Любой — для ОСНО нет ограничений</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">3</span>Клиент говорит «ONLINE дорого». Что делаешь?</div><div class="options">
-            <div class="option" onclick="sel(this,2,2,false,'Сразу предлагать альтернативу — значит обесценивать основное решение. Сначала нужно выяснить с чем клиент сравнивает.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Сразу предлагаю Робочеки как бесплатную альтернативу</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,2,true,'Правильно. Сначала выяснить с чем сравнивает — у конкурентов касса часто идёт с комиссией с каждого чека (+1,5% у CloudPayments). Полная картина может изменить восприятие.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю с чем сравнивает: «У конкурентов часто отдельная комиссия с каждого чека — давайте посчитаем»</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,2,false,'Говорить что бесплатного нет — неверно. Робочеки и Робочеки СМЗ — бесплатные решения.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Объясняю что бесплатных кассовых решений на рынке не существует</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">3</span>Клиент говорит «ONLINE дорого». Что делаешь первым делом?</div><div class="options">
+            <div class="option" onclick="sel(this,2,2,false,'Переходить сразу к альтернативе — значит обесценивать ONLINE без аргументов.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Сразу предлагаю Робочеки как бесплатную альтернативу</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,2,true,'Правильно. Сначала выяснить с чем сравнивает — у конкурентов часто есть доп. комиссия с каждого чека.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю с чем сравнивает: у конкурентов бывает доп. комиссия с чека — давайте посчитаем полную стоимость</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,2,false,'Неверно — Робочеки и Робочеки СМЗ бесплатные.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Объясняю что бесплатных кассовых решений не существует</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">4</span>Клиент — ИП продаёт одежду с маркировкой. Можно ли использовать Робочеки?</div><div class="options">
-            <div class="option" onclick="sel(this,2,3,false,'Нельзя использовать Робочеки вообще — неверно. Можно, но маркировка вносится вручную.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Нет — маркировку поддерживает только Robokassa ONLINE</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,3,true,'Верно. Робочеки поддерживают маркировку вручную. ONLINE — автоматическая передача в Честный ЗНАК. Для клиента с маркировкой ONLINE удобнее, но Робочеки технически возможны.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Можно — маркировку вносят вручную. ONLINE удобнее тем, что передача в Честный ЗНАК автоматическая</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,3,false,'Робочеки не поддерживают АУСН, но маркировку (вручную) поддерживают. Это разные параметры.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Да, Робочеки подходят — они поддерживают все функции ONLINE</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">4</span>ИП продаёт одежду с маркировкой. Подойдут ли Робочеки?</div><div class="options">
+            <div class="option" onclick="sel(this,2,3,false,'Нельзя совсем — неверно. Можно, но маркировка вносится вручную.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Нет — маркировку поддерживает только ONLINE</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,3,true,'Верно. ONLINE предпочтительнее (авто в Честный ЗНАК). Робочеки технически возможны, маркировка вручную.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Можно — маркировка вручную. ONLINE удобнее: автоматическая передача в Честный ЗНАК</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,3,false,'Робочеки не поддерживают АУСН, но маркировку вручную можно. Это разные параметры.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Да, Робочеки полностью заменяют ONLINE — разницы нет</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">5</span>Клиент только что создал магазин в личном кабинете. Когда правильный момент для разговора о кассе?</div><div class="options">
-            <div class="option" onclick="sel(this,2,4,false,'Касса выбирается после активации магазина, не в процессе создания. Не стоит создавать лишнюю нагрузку на клиента раньше времени.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Сразу при создании магазина — нужно определиться заранее</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,4,true,'Верно. Касса выбирается и подключается после того как магазин активирован. Сначала модерация — потом касса.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">После активации магазина — касса подключается на следующем шаге</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,4,false,'Ждать первый платёж — слишком поздно. Без кассы клиент не сможет выставлять чеки, что требуется по закону.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">После первого платежа — тогда станет ясно что нужно</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">5</span>Что входит в 19 200 ₽ аренды ONLINE на 12 месяцев?</div><div class="options">
+            <div class="option" onclick="sel(this,2,4,false,'ФН не включён — покупается отдельно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Аренда кассы + ФН на 36 месяцев + ОФД</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,4,true,'Верно. 19 200 ₽ = аренда со скидкой 20% + ОФД бесплатно. ФН — отдельно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Аренда со скидкой 20% + ОФД бесплатно. ФН — отдельно</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,4,false,'ОФД включён бесплатно — это ключевое преимущество ONLINE.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Только аренда — ОФД и ФН оплачиваются отдельно</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">6</span>Что входит в стоимость аренды Robokassa ONLINE на 12 месяцев (19 200 ₽)?</div><div class="options">
-            <div class="option" onclick="sel(this,2,5,false,'ФН не включён — покупается отдельно (12 500 или 18 500 ₽ в зависимости от СНО).')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Аренда кассы + ФН на 36 месяцев + ОФД</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,5,true,'Верно. 19 200 ₽ — аренда кассы со скидкой 20% и бесплатным ОФД. ФН покупается отдельно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Аренда кассы (скидка 20%) + ОФД бесплатно. ФН — отдельно</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,2,5,false,'ОФД включён бесплатно на весь срок аренды — это одно из преимуществ.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Только аренда кассы — ОФД и ФН оплачиваются отдельно</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">6</span>Клиент на Робочеках говорит: «Хочу чтобы чеки выходили от моего имени». Что нужно?</div><div class="options">
+            <div class="option" onclick="sel(this,2,5,false,'Робочеки всегда агентские — это принцип, не настройка.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Перенастроить Робочеки — там есть такая опция</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,5,true,'Верно. Чеки от имени клиента — только ONLINE. Это отдельный продукт с персональной кассой в ФНС.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Перейти на Robokassa ONLINE — только там чеки от имени ИП/ЮЛ клиента</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,2,5,false,'Робочеки СМЗ — для самозанятых и ИП на НПД. Здесь другой случай.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Переключиться на Робочеки СМЗ</div><div class="opt-explain"></div></div></div>
           </div></div>
         </div>
-        <div class="test-actions"><button class="btn-check" id="check-3" onclick="chk(3,6,5)" disabled>Проверить ответы</button></div>
-        <div class="test-result" id="result-3"><div class="tri" id="ri-3"></div><div class="trt" id="rt-3"></div><div class="trd" id="rd-3"></div>
-          <button class="btn-primary" id="next-3" onclick="nxt(3)" style="display:none">Следующий модуль →</button>
+        <div class="test-actions"><button class="btn-check" id="check-3" onclick="chkWithUnlock(3,6,5,3,3)" disabled>Проверить ответы</button></div>
+        <div class="test-result" id="result-3">
+          <div class="tri" id="ri-3"></div><div class="trt" id="rt-3"></div><div class="trd" id="rd-3"></div>
           <button class="btn-secondary" id="retry-3" onclick="retry(3)" style="display:none">Попробовать ещё раз</button>
         </div>
       </div>
+      <!-- ШАГ 3: КЕЙС -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-3-3">3</div>
+        <div class="step-title-wrap"><div class="step-title">🧩 Разбор кейса</div><div class="step-sub">Реальная ситуация — выбери правильное решение</div></div>
+        <div class="step-badge locked-b" id="sb-badge-3-3">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-3-3">
+        <div class="case-wrap">
+          <div class="case-label">Ситуация — исходящий звонок</div>
+          <div class="case-text">Клиент — ИП на УСН, интернет-магазин электроники, оборот ~800 000 ₽/мес. Магазин активирован. В разговоре: «Слышал Робочеки бесплатные — зачем платить за ONLINE?»</div>
+          <div class="case-context">В анкете: продаёт телефоны и аксессуары. Часть товаров с маркировкой.</div>
+        </div>
+        <div class="sh" style="margin-bottom:12px;">Как отвечаешь?</div>
+        <div class="case-options" id="case-opts-3">
+          <div class="case-option" onclick="selectCase(this,'3','A')" id="case-3-A">
+            <div class="case-opt-letter">A</div>
+            <div><div class="case-opt-text">«Вы правы, Робочеки бесплатные и для старта подойдут — давайте подключим»</div>
+            <div class="case-opt-explain">Ты видел маркировку в анкете — и не использовал это. ONLINE — приоритет №1, особенно при маркировке. Сдаться без аргументов = упустить сделку.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'3','B')" id="case-3-B">
+            <div class="case-opt-letter">B</div>
+            <div><div class="case-opt-text">«Разница в том, что ONLINE — ваша персональная касса: чеки от вашего имени, ОФД бесплатно. Плюс вижу у вас есть товары с маркировкой — ONLINE автоматически передаёт данные в Честный ЗНАК, Робочеки только вручную. При обороте 800к разница в трудозатратах будет ощутимой»</div>
+            <div class="case-opt-explain">Лучший ответ. Ты использовал данные из анкеты (маркировка), объяснил конкретную разницу и перевёл в язык бизнеса клиента.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'3','C')" id="case-3-C">
+            <div class="case-opt-letter">C</div>
+            <div><div class="case-opt-text">«Уточните с чем сравниваете? У конкурентов за кассу берут комиссию с каждого чека»</div>
+            <div class="case-opt-explain">Хорошая тактика при сравнении с платными конкурентами. Но здесь клиент сравнивает с вашим же бесплатным продуктом — нужно объяснить разницу между ONLINE и Робочеками.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'3','D')" id="case-3-D">
+            <div class="case-opt-letter">D</div>
+            <div><div class="case-opt-text">«ONLINE это профессиональное решение, надёжнее и солиднее — для серьёзного бизнеса»</div>
+            <div class="case-opt-explain">«Надёжнее и солиднее» — не аргумент. Нужны конкретные отличия: чеки от имени, маркировка, АУСН.</div></div>
+          </div>
+        </div>
+        <button class="btn-case" id="case-btn-3" onclick="checkCase('3','B')" disabled>Проверить выбор</button>
+        <div class="case-result" id="case-result-3">
+          <div class="case-result-title">✓ Разбор завершён</div>
+          <div class="case-result-desc">Используй данные из анкеты → объясни конкретную разницу → переведи в язык бизнеса клиента.</div>
+        </div>
+        <div id="case-next-3" style="display:none;margin-top:16px;text-align:center;">
+          <button class="btn-primary" onclick="unlockStep(3,4)">К практике диалога →</button>
+        </div>
+      </div>
+      <!-- ШАГ 4: ДИАЛОГ -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-3-4">4</div>
+        <div class="step-title-wrap"><div class="step-title">💬 Диалог с клиентом</div><div class="step-sub">3 хода — квалификация по кассе</div></div>
+        <div class="step-badge locked-b" id="sb-badge-3-4">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-3-4">
+        <div class="dial-scenario">
+          <div class="dial-scenario-label">Сценарий — исходящий звонок</div>
+          <div class="dial-scenario-text">ИП на УСН, магазин только что активирован. Ты звонишь помочь сделать следующие шаги и довести до первого платежа. В числе этих шагов — подключение кассы.</div>
+        </div>
+        <div class="dial-progress-bar">
+          <div class="dial-step-dot active-d" id="ddot-3-1"></div>
+          <div class="dial-step-dot" id="ddot-3-2"></div>
+          <div class="dial-step-dot" id="ddot-3-3"></div>
+        </div>
+        <div id="dial-3-body">
+          <div id="dial-turn-3-1">
+            <div class="dial-messages">
+              <div class="dial-msg-wrap"><div class="dial-label client-l">Клиент</div><div class="dial-msg client">Да, магазин создал. Что дальше?</div></div>
+            </div>
+            <div class="sh" style="margin-bottom:10px;">Твой ответ:</div>
+            <div class="dial-choices" id="dc-3-1">
+              <div class="dial-choice" onclick="selectDial(this,'3',1,'A')" id="dial-3-1-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Нужна касса — рекомендую Robokassa ONLINE, 19 200 ₽ в год.»
+                <div class="dial-feedback">Сразу цена без выяснения ситуации — давление. Может у клиента уже есть касса. Сначала квалифицируй.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',1,'B')" id="dial-3-1-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Следующий шаг — подать заявку на активацию. Пока она рассматривается — как у вас с онлайн-чеками? Есть касса или ещё нет?»
+                <div class="dial-feedback">Правильно. Порядок шагов + квалификационный вопрос по кассе. Не навязываешь — сначала выясняешь ситуацию.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',1,'C')" id="dial-3-1-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Нужно создать магазин, подключить кассу, настроить платёжную форму, активировать вывод — всё перечислю по порядку.»
+                <div class="dial-feedback">Слишком много информации сразу. Клиент создал магазин — это уже сделано. Нужен следующий конкретный шаг, а не весь список.</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-3-1" onclick="dialNext('3',1)">Продолжить →</button>
+          </div>
+          <div id="dial-turn-3-2" style="display:none">
+            <div class="dial-messages" id="dial-msgs-3-2"></div>
+            <div class="sh" style="margin-bottom:10px;">Клиент отвечает — твой ход:</div>
+            <div class="dial-choices" id="dc-3-2">
+              <div class="dial-choice" onclick="selectDial(this,'3',2,'A')" id="dial-3-2-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Клиент: "Кассы нет, не думал об этом."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Есть Робочеки — бесплатно, можно начать с них.»
+                <div class="dial-feedback">Ты пропустил ONLINE. Всегда начинай с ONLINE как приоритет №1. Робочеки — только если клиент говорит «дорого».</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',2,'B')" id="dial-3-2-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Клиент: "Кассы нет, не думал об этом."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Расскажу про основное решение — Robokassa ONLINE. Это ваша персональная облачная касса, зарегистрированная в ФНС на вас. Чеки от вашего имени, ОФД включён. 19 200 ₽ в год, скидка 20%.»
+                <div class="dial-feedback">Правильно. Начинаешь с ONLINE, объясняешь что это и его преимущества, называешь цену. Клиент получает полную картину основного решения.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',2,'C')" id="dial-3-2-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Клиент: "Кассы нет, не думал об этом."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Это требование закона. Мы предоставляем инструменты — выбирайте сами.»
+                <div class="dial-feedback">Холодно и безучастно. Клиент не знает что выбрать — твоя задача помочь, а не умыть руки.</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-3-2" onclick="dialNext('3',2)">Продолжить →</button>
+          </div>
+          <div id="dial-turn-3-3" style="display:none">
+            <div class="dial-messages" id="dial-msgs-3-3"></div>
+            <div class="sh" style="margin-bottom:10px;">Клиент говорит «дороговато»:</div>
+            <div class="dial-choices" id="dc-3-3">
+              <div class="dial-choice" onclick="selectDial(this,'3',3,'A')" id="dial-3-3-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Клиент: "19 тысяч дороговато. Есть что-то бесплатное?"»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Есть Робочеки — бесплатно. Но чеки будут агентские, от имени Robokassa, не от вашего. Для старта подойдёт, потом можно перейти на ONLINE.»
+                <div class="dial-feedback">Правильно. Предлагаешь Робочеки только после «дорого», честно объясняешь разницу и оставляешь путь к ONLINE. Правильная последовательность.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',3,'B')" id="dial-3-3-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Клиент: "19 тысяч дороговато. Есть что-то бесплатное?"»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Бесплатного нет — касса это обязательная статья расходов.»
+                <div class="dial-feedback">Неверно фактически. Робочеки — бесплатное решение. Неверная информация подрывает доверие.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'3',3,'C')" id="dial-3-3-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Клиент: "19 тысяч дороговато. Есть что-то бесплатное?"»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Ок, берите Робочеки — разницы особой нет.»
+                <div class="dial-feedback">«Разницы нет» — неверно. Агентские чеки vs чеки от имени клиента — принципиальная разница. Никогда не говори что разницы нет там, где она есть.</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-3-3" onclick="dialFinish('3')">Завершить диалог →</button>
+          </div>
+        </div>
+        <div class="dial-finish" id="dial-finish-3">
+          <div class="dial-finish-title">🎯 Диалог завершён!</div>
+          <div class="dial-finish-desc">Последовательность: квалифицируй (есть касса?) → предлагай ONLINE первым → если «дорого» — объясни разницу с Робочеками честно → оставляй путь к ONLINE.</div>
+          <button class="btn-primary" onclick="nxt(3)">Следующий модуль →</button>
+        </div>
+      </div>
     </div>
+    <!-- КОНЕЦ МОДУЛЯ 3 -->
 
+    <!-- ══════ МОДУЛЬ 4 ══════ -->
     <div class="module-card" id="mod-4" style="display:none">
       <div class="module-card-head">
-        <div class="mod-badge m4">Модуль 4 · Путь клиента</div>
-        <h2>Путь клиента</h2>
-        <p>От регистрации до первого платежа — шаги которые нужно знать и уметь объяснить.</p>
+        <div class="mod-badge m4">Модуль 4 · Путь клиента и требования</div>
+        <h2>Путь клиента и требования к подключению</h2>
+        <p>От регистрации до первого платежа — шаги, требования к сайту, типичные возражения.</p>
       </div>
-      <div class="module-content">
+      <!-- ШАГ 1: ПУТЬ КЛИЕНТА -->
+      <div class="step-header">
+        <div class="step-num active" id="sn-4-1">1</div>
+        <div class="step-title-wrap"><div class="step-title">📖 Путь клиента</div><div class="step-sub">Шаги от регистрации до первого платежа</div></div>
+        <div class="step-badge active-b" id="sb-badge-4-1">Активно</div>
+      </div>
+      <div class="step-content open" id="sc-4-1">
         <div class="cs"><div class="sh">Шаги пути клиента</div>
           <div class="path-steps">
-            <div class="path-step"><div class="pnum">1</div><div><div class="ptitle">Регистрация</div><div class="pdesc">Клиент заполняет анкету на robokassa.com — полностью онлайн. Время зависит от готовности документов.</div></div></div>
-            <div class="path-step"><div class="pnum">2</div><div><div class="ptitle">Создание магазина</div><div class="pdesc">В личном кабинете — данные о проекте, товарах, услугах, сайт или ресурс</div></div></div>
-            <div class="path-step"><div class="pnum">3</div><div><div class="ptitle">Подача заявки на активацию</div><div class="pdesc">Модерация службой безопасности. Скорость зависит от готовности сайта и документов клиента.</div></div></div>
-            <div class="path-step"><div class="pnum">4</div><div><div class="ptitle">Подключение кассового решения</div><div class="pdesc">После активации магазина — ONLINE, Робочеки или СМЗ в зависимости от типа бизнеса</div></div></div>
-            <div class="path-step"><div class="pnum">5</div><div><div class="ptitle">Настройка платёжной формы</div><div class="pdesc">Клиент настраивает по документации на docs.robokassa.ru. Менеджер консультирует по ошибкам на платёжной странице.</div></div></div>
+            <div class="path-step"><div class="pnum">1</div><div><div class="ptitle">Регистрация и заполнение анкеты</div><div class="pdesc">Полностью онлайн. Время зависит от готовности документов и самого клиента.</div></div></div>
+            <div class="path-step"><div class="pnum">2</div><div><div class="ptitle">Создание магазина</div><div class="pdesc">В личном кабинете — данные о проекте, товарах, услугах, ссылка на ресурс</div></div></div>
+            <div class="path-step"><div class="pnum">3</div><div><div class="ptitle">Подача заявки на активацию</div><div class="pdesc">Проверка службой безопасности. Скорость зависит от готовности сайта и документов.</div></div></div>
+            <div class="path-step"><div class="pnum">4</div><div><div class="ptitle">Подключение кассового решения</div><div class="pdesc">После активации — ONLINE, Робочеки или СМЗ в зависимости от типа бизнеса</div></div></div>
+            <div class="path-step"><div class="pnum">5</div><div><div class="ptitle">Настройка платёжной формы</div><div class="pdesc">Клиент настраивает по документации docs.robokassa.ru. Менеджер консультирует по ошибкам на платёжной странице.</div></div></div>
             <div class="path-step"><div class="pnum">6</div><div><div class="ptitle">Активация вывода средств</div><div class="pdesc">Привязка расчётного счёта, настройка автовывода</div></div></div>
             <div class="path-step fin"><div class="pnum">7</div><div><div class="ptitle">Первый платёж</div><div class="pdesc">Цель онбординга клиента — первая реальная транзакция</div></div></div>
           </div>
         </div>
         <div class="cs"><div class="sh">Что делает менеджер на каждом шаге</div>
-          <div class="hl green"><div class="hl-t">До звонка — подготовка</div><div class="hl-b">Смотри проект в CRM до звонка: тип бизнеса, статус, что уже подключено. Звони подготовленным — не задавай вопросы на которые уже есть ответы.</div></div>
-          <div class="hl blue"><div class="hl-t">На этапе «не актуально»</div><div class="hl-b">Уточни причину: «Проект отложили или что-то другое произошло?» Не закрывай без понимания. Часто это просто не лучшее время — поставь задачу вернуться через 2–4 недели.</div></div>
-          <div class="hl amber"><div class="hl-t">На этапе модерации</div><div class="hl-b">Держи клиента в курсе. Если что-то не так с сайтом или документами — помоги разобраться, не жди пока клиент сам справится.</div></div>
+          <div class="hl green"><div class="hl-t">До звонка — готовься</div><div class="hl-b">Смотри анкету в CRM до звонка: тип бизнеса, статус, что уже заполнено. Звони подготовленным — не задавай вопросы на которые уже есть ответы.</div></div>
+          <div class="hl blue"><div class="hl-t">«Не актуально» — не отпускай</div><div class="hl-b">Уточни причину: «Проект отложили или что-то другое?» Не закрывай без понимания. Это не отказ — выясни что за этим стоит.</div></div>
+          <div class="hl amber"><div class="hl-t">На этапе модерации</div><div class="hl-b">Держи клиента в курсе. Если что-то не так с сайтом — помоги разобраться, не жди пока клиент сам справится.</div></div>
+        </div>
+        <div style="margin-top:20px;text-align:center;">
+          <button class="btn-primary" onclick="unlockStep(4,2)">Дальше — требования к подключению →</button>
         </div>
       </div>
-      <div class="test-section" style="padding:24px;">
-        <div class="test-header"><h3>Тест — Модуль 4</h3><div class="test-pass-info">Проходной балл: 4 из 5</div></div>
+      <!-- ШАГ 2: ТРЕБОВАНИЯ К ПОДКЛЮЧЕНИЮ -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-4-2">2</div>
+        <div class="step-title-wrap"><div class="step-title">🔍 Требования к подключению</div><div class="step-sub">Что должно быть на сайте клиента перед модерацией</div></div>
+        <div class="step-badge locked-b" id="sb-badge-4-2">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-4-2">
+        <div class="hl amber"><div class="hl-t">Почему важно знать это</div><div class="hl-b">Каждый проект перед активацией проходит проверку службой безопасности. Твоя задача — помочь клиенту подготовиться так, чтобы модерация прошла без задержек. <a href="https://robokassa.com/how-works/" target="_blank" style="color:var(--amber);font-weight:700;">Страница требований →</a></div></div>
+        <div class="cs mt12"><div class="sh">5 обязательных требований</div>
+          <div class="req-grid">
+            <div class="req-item"><div class="req-num">1</div><div><div class="req-title">Ресурс открыт и доступен</div><div class="req-desc">Ссылка работает, сайт открывается без авторизации. Не «в разработке», не «скоро».</div></div></div>
+            <div class="req-item"><div class="req-num">2</div><div><div class="req-title">Актуальный контент</div><div class="req-desc">Реальные товары/услуги с ценами. Тестовые карточки и «Lorem ipsum» — убрать.</div></div></div>
+            <div class="req-item"><div class="req-num">3</div><div><div class="req-title">Оферта или пользовательское соглашение</div><div class="req-desc">Описывает условия для покупателей. Можно сгенерировать в личном кабинете.</div></div></div>
+            <div class="req-item"><div class="req-num">4</div><div><div class="req-title">Контактные данные</div><div class="req-desc">Email, телефон или мессенджер — доступны на сайте, не скрыты.</div></div></div>
+            <div class="req-item"><div class="req-num">5</div><div><div class="req-title">Реквизиты продавца</div><div class="req-desc">ИНН/ОГРН — в подвале сайта. Для ИП: «ИП Фамилия Имя Отчество».</div></div></div>
+          </div>
+        </div>
+        <div class="cs"><div class="sh">Дополнительные требования и нюансы</div>
+          <div class="hl blue"><div class="hl-t">Рекомендуется (не обязательно, но важно)</div><div class="hl-b">Политика обработки персональных данных, условия доставки и возврата. Для Telegram/VK — те же требования: описание товаров, реквизиты, контакты, ссылка на оферту.</div></div>
+          <div class="hl danger"><div class="hl-t">Контент 18+</div><div class="hl-b">Обязательна страница с возрастным ограничением и подтверждением возраста (баннер, чекбокс, выбор даты рождения).</div></div>
+          <div class="hl amber"><div class="hl-t">Сезонный или временно закрытый сайт</div><div class="hl-b">Клиент обязан уведомить Robokassa перед отключением сайта или сменой URL. Закрытый без уведомления сайт — нарушение условий.</div></div>
+          <div class="hl green"><div class="hl-t">Частый вопрос: «А без оферты никак?»</div><div class="hl-b">Оферта не обязательна если вся необходимая информация размещена на сайте. Но настоятельно рекомендуется — защищает от штрафов и требований возврата.</div></div>
+        </div>
+        <div style="margin-top:20px;text-align:center;">
+          <button class="btn-primary" onclick="unlockStep(4,3)">Материал изучен — к тесту →</button>
+        </div>
+      </div>
+      <!-- ШАГ 3: ТЕСТ -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-4-3">3</div>
+        <div class="step-title-wrap"><div class="step-title">✅ Проверь себя</div><div class="step-sub">6 вопросов, включая множественный выбор — нужно 5 из 6</div></div>
+        <div class="step-badge locked-b" id="sb-badge-4-3">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-4-3">
+        <div class="test-header"><h3>Тест — Модуль 4</h3><div class="test-pass-info">Проходной балл: 5 из 6</div></div>
         <div id="questions-4">
-          <div class="question"><div class="q-text"><span class="qnb">1</span>Клиент только что заполнил анкету. Что ты делаешь перед тем как позвонить?</div><div class="options">
-            <div class="option" onclick="sel(this,3,0,false,'Звонить сразу без подготовки — значит задавать вопросы на которые уже есть ответы в анкете. Клиент это чувствует.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Звоню сразу — главное не затягивать</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,0,true,'Верно. Смотришь анкету, понимаешь бизнес клиента — и звонишь подготовленным. Это называется «звонить не вслепую».')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Смотрю анкету в CRM — тип бизнеса, сайт, что уже заполнено. Звоню подготовленным.</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,0,false,'Ждать — значит терять тёплый лид. Звонить нужно, но подготовившись.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Жду пока клиент сам напишет — если надо, обратится</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">1</span>Какие из этих пунктов обязательны для прохождения модерации? <span class="q-multi-hint">Несколько ответов</span></div><div class="options">
+            <div class="option multi" onclick="selMulti(this,3,0,0,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Реквизиты продавца (ИНН/ОГРН) в подвале сайта</div><div class="opt-explain"></div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,0,1,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Политика обработки персональных данных</div><div class="opt-explain">Это рекомендация, не обязательное требование. Нужна если собираете данные пользователей.</div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,0,2,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Актуальные товары/услуги с реальными ценами (не тестовые)</div><div class="opt-explain"></div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,0,3,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Контактные данные для связи с продавцом</div><div class="opt-explain"></div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,0,4,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">SSL-сертификат на сайте (https)</div><div class="opt-explain">SSL рекомендуется и важен для безопасности, но не входит в перечень 5 обязательных требований на странице robokassa.com/how-works/.</div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">2</span>Клиент во время звонка говорит «не актуально». Как действуешь?</div><div class="options">
-            <div class="option" onclick="sel(this,3,1,false,'Отпустить без понимания причины — потеря клиента. «Не актуально» — это не отказ, это сигнал.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Вежливо прощаюсь — не хочу давить</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,1,true,'Правильно. «Не актуально» ≠ отказ. Нужно выяснить что произошло — проект отложили, нашли другое решение, или просто занят. Это определяет следующий шаг.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю: «Проект отложили или что-то другое произошло?» — не закрываю без понимания</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,1,false,'Скидка без понимания причины — слабый ход. Может проблема вообще не в цене.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Предлагаю скидку — обычно помогает</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">2</span>Клиент заполнил анкету. Ты собираешься позвонить. Что делаешь перед звонком?</div><div class="options">
+            <div class="option" onclick="sel(this,3,1,false,'Звонить сразу без подготовки — значит задавать вопросы на которые уже есть ответы в анкете.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Звоню сразу — главное не затягивать</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,1,true,'Верно. Смотришь анкету — тип бизнеса, сайт, что уже заполнено. Звонишь подготовленным, а не вслепую.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Смотрю анкету: тип бизнеса, сайт, статус — звоню подготовленным</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,1,false,'Ждать — значит терять тёплый лид. Нужно звонить, но подготовившись.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Жду когда клиент сам напишет — если надо, обратится</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">3</span>Клиент прошёл модерацию. На каком шаге теперь подключается касса?</div><div class="options">
-            <div class="option" onclick="sel(this,3,2,false,'До модерации касса не подключается — сначала нужно пройти активацию магазина.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Касса подключается до подачи заявки на активацию</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,2,true,'Верно. После активации магазина — клиент выбирает и подключает кассовое решение.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">После активации магазина — следующий шаг после модерации</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,2,false,'После первого платежа — слишком поздно. Без кассы нельзя легально принимать платежи.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Касса подключается только после первого платежа</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">3</span>Клиент говорит «не актуально». Как действуешь?</div><div class="options">
+            <div class="option" onclick="sel(this,3,2,false,'Отпустить без понимания причины — потеря клиента. «Не актуально» — это не отказ.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Вежливо прощаюсь — не хочу давить</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,2,true,'Правильно. «Не актуально» ≠ отказ. Нужно выяснить что произошло: проект отложили, нашли другое решение, или просто занят.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю: «Проект отложили или что-то другое?» — не закрываю без понимания</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,2,false,'Скидка без понимания причины — слабый ход. Может проблема не в цене вообще.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Предлагаю скидку — обычно помогает</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">4</span>Клиент спрашивает: «У меня не работает платёжная страница — ошибка при оплате». Что делаешь?</div><div class="options">
-            <div class="option" onclick="sel(this,3,3,false,'Слишком широко. Ошибки на платёжной странице — это наша зона. Отправлять клиента искать самому — плохой сервис.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«По техническим вопросам пишите разработчику — это не наша зона»</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,3,true,'Верно. Ошибки на платёжной странице в процессе оплаты — это именно то, в чём мы помогаем. Уточни детали и помоги разобраться.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю детали ошибки — помогаем разбираться с ошибками платёжной страницы в процессе оплаты</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,3,false,'Отправить в поддержку можно, но сначала нужно самому попытаться помочь и уточнить детали.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Напишите в поддержку на support@robokassa.ru»</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">4</span>Клиент прошёл модерацию. Когда подключается касса?</div><div class="options">
+            <div class="option" onclick="sel(this,3,3,false,'До модерации касса не подключается.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">До подачи заявки на активацию — нужно определиться заранее</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,3,true,'Верно. После активации магазина — следующий шаг после модерации.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">После активации магазина — следующий шаг после модерации</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,3,false,'После первого платежа — слишком поздно.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">После первого платежа — тогда станет ясно что нужно</div><div class="opt-explain"></div></div></div>
           </div></div>
-          <div class="question"><div class="q-text"><span class="qnb">5</span>Клиент спрашивает: «Я только зарегистрировался — когда смогу принять первый платёж?» Правильный ответ:</div><div class="options">
-            <div class="option" onclick="sel(this,3,4,false,'«Сегодня» — неверно. Нужна модерация, выбор кассы, настройка. Это создаёт ложные ожидания.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Уже сегодня — подключение занимает несколько минут»</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,4,true,'Правильно. Процесс зависит от готовности сайта и документов. Не нужно называть конкретные сроки — у каждого по-разному.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Зависит от вашей готовности — сайт, документы, касса. Всё онлайн, у кого-то быстро, у кого-то требует доработки»</div><div class="opt-explain"></div></div></div>
-            <div class="option" onclick="sel(this,3,4,false,'Две недели — слишком пессимистично и не соответствует реальности.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Обычно около двух недель — модерация плюс настройка»</div><div class="opt-explain"></div></div></div>
+          <div class="question"><div class="q-text"><span class="qnb">5</span>Клиент: «У меня ошибка при оплате — покупатель не может заплатить». Что делаешь?</div><div class="options">
+            <div class="option" onclick="sel(this,3,4,false,'Слишком широко — отправить разбираться самому это плохой сервис. Ошибки на платёжной странице — наша зона.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«По техническим вопросам обращайтесь к своему разработчику»</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,4,true,'Верно. Ошибки на платёжной странице в процессе оплаты — именно то в чём мы помогаем. Уточняй детали и разбирайся.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">Уточняю детали ошибки — помогаем с ошибками на платёжной странице в процессе оплаты</div><div class="opt-explain"></div></div></div>
+            <div class="option" onclick="sel(this,3,4,false,'Можно передать в поддержку, но сначала нужно уточнить детали самому.')"><div class="oradio"></div><div class="opt-body"><div class="opt-text">«Напишите на support@robokassa.ru — они разберутся»</div><div class="opt-explain"></div></div></div>
+          </div></div>
+          <div class="question"><div class="q-text"><span class="qnb">6</span>Что из этого верно про требования к сайту? <span class="q-multi-hint">Несколько ответов</span></div><div class="options">
+            <div class="option multi" onclick="selMulti(this,3,5,0,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Если сайт временно закрыт или URL меняется — нужно уведомить Robokassa</div><div class="opt-explain"></div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,5,1,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Для контента 18+ никаких дополнительных требований нет</div><div class="opt-explain">Для сайтов с контентом 18+ обязательна страница с подтверждением возраста.</div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,5,2,true)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Для Telegram-бота требования те же: описание товаров, реквизиты, контакты</div><div class="opt-explain"></div></div></div>
+            <div class="option multi" onclick="selMulti(this,3,5,3,false)"><div class="ocheck"></div><div class="opt-body"><div class="opt-text">Оферта обязательна для всех — без неё модерация не пройдёт</div><div class="opt-explain">Оферта обязательна если на сайте нет всей необходимой информации. Если есть — оферта рекомендуется, но не обязательна.</div></div></div>
           </div></div>
         </div>
-        <div class="test-actions"><button class="btn-check" id="check-4" onclick="chk(4,5,4)" disabled>Проверить ответы</button></div>
-        <div class="test-result" id="result-4"><div class="tri" id="ri-4"></div><div class="trt" id="rt-4"></div><div class="trd" id="rd-4"></div>
-          <button class="btn-primary" id="next-4" onclick="nxt(4)" style="display:none">Финальный тест →</button>
+        <div class="test-actions"><button class="btn-check" id="check-4" onclick="chkWithUnlock(4,6,5,4,4)" disabled>Проверить ответы</button></div>
+        <div class="test-result" id="result-4">
+          <div class="tri" id="ri-4"></div><div class="trt" id="rt-4"></div><div class="trd" id="rd-4"></div>
           <button class="btn-secondary" id="retry-4" onclick="retry(4)" style="display:none">Попробовать ещё раз</button>
         </div>
       </div>
+      <!-- ШАГ 4: КЕЙС -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-4-4">4</div>
+        <div class="step-title-wrap"><div class="step-title">🧩 Разбор кейса</div><div class="step-sub">Реальная ситуация — помоги клиенту пройти модерацию</div></div>
+        <div class="step-badge locked-b" id="sb-badge-4-4">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-4-4">
+        <div class="case-wrap">
+          <div class="case-label">Ситуация — исходящий звонок</div>
+          <div class="case-text">Клиент — ИП, продаёт украшения ручной работы. Подал заявку на активацию 3 дня назад, ответа нет. Звонит и говорит: «Почему так долго? Я уже всё заполнил».</div>
+          <div class="case-context">Ты заходишь в CRM и видишь: в анкете сайт открывается, товары есть, но реквизиты ИП в подвале не указаны, и нет контактных данных для покупателей.</div>
+        </div>
+        <div class="sh" style="margin-bottom:12px;">Как действуешь?</div>
+        <div class="case-options" id="case-opts-4">
+          <div class="case-option" onclick="selectCase(this,'4','A')" id="case-4-A">
+            <div class="case-opt-letter">A</div>
+            <div><div class="case-opt-text">«Модерация занимает время — это нормально, подождите ещё немного»</div>
+            <div class="case-opt-explain">Ты видел в CRM что на сайте нет реквизитов и контактов — и промолчал. Клиент продолжит ждать и не пройдёт модерацию. Это потеря времени для обоих.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'4','B')" id="case-4-B">
+            <div class="case-opt-letter">B</div>
+            <div><div class="case-opt-text">«Понял, давайте разберёмся. Я посмотрел ваш сайт — не хватает двух вещей: реквизитов ИП в подвале (ИНН/ОГРНИП) и контактных данных для покупателей. Добавьте их — и модерация пройдёт значительно быстрее»</div>
+            <div class="case-opt-explain">Лучший ответ. Ты использовал данные из CRM, конкретно назвал что нужно исправить и объяснил как это ускорит процесс. Клиент чувствует что ты на его стороне.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'4','C')" id="case-4-C">
+            <div class="case-opt-letter">C</div>
+            <div><div class="case-opt-text">«Это вопрос к нашей службе модерации — я не могу повлиять на скорость проверки»</div>
+            <div class="case-opt-explain">Уход от ответственности. Ты видишь в CRM конкретную проблему — отправить клиента «к модерации» вместо помощи это плохой сервис.</div></div>
+          </div>
+          <div class="case-option" onclick="selectCase(this,'4','D')" id="case-4-D">
+            <div class="case-opt-letter">D</div>
+            <div><div class="case-opt-text">«Вам нужно полностью переделать сайт — добавить оферту, политику персональных данных, условия доставки и возврата»</div>
+            <div class="case-opt-explain">Перегруз. Ты видишь две конкретные проблемы (реквизиты и контакты) — не нужно перечислять всё подряд. Называй то что конкретно мешает прямо сейчас.</div></div>
+          </div>
+        </div>
+        <button class="btn-case" id="case-btn-4" onclick="checkCase('4','B')" disabled>Проверить выбор</button>
+        <div class="case-result" id="case-result-4">
+          <div class="case-result-title">✓ Разбор завершён</div>
+          <div class="case-result-desc">Смотри в CRM до звонка → называй конкретную проблему → объясняй как это исправить. Знание требований к подключению — это твой инструмент помощи клиенту, а не просто список для зачубрки.</div>
+        </div>
+        <div id="case-next-4" style="display:none;margin-top:16px;text-align:center;">
+          <button class="btn-primary" onclick="unlockStep(4,5)">К практике диалога →</button>
+        </div>
+      </div>
+      <!-- ШАГ 5: ДИАЛОГ -->
+      <div class="step-header">
+        <div class="step-num pending" id="sn-4-5">5</div>
+        <div class="step-title-wrap"><div class="step-title">💬 Диалог с клиентом</div><div class="step-sub">3 хода — работа с возражением «не актуально»</div></div>
+        <div class="step-badge locked-b" id="sb-badge-4-5">Заблокировано</div>
+      </div>
+      <div class="step-content" id="sc-4-5">
+        <div class="dial-scenario">
+          <div class="dial-scenario-label">Сценарий — исходящий звонок</div>
+          <div class="dial-scenario-text">Клиент зарегистрировался неделю назад, заполнил анкету, но не двигается дальше. Ты звонишь — цель довести до активации и первого платежа. В анкете: ИП, сервис для репетиторов, сайт указан.</div>
+        </div>
+        <div class="dial-progress-bar">
+          <div class="dial-step-dot active-d" id="ddot-4-1"></div>
+          <div class="dial-step-dot" id="ddot-4-2"></div>
+          <div class="dial-step-dot" id="ddot-4-3"></div>
+        </div>
+        <div id="dial-4-body">
+          <div id="dial-turn-4-1">
+            <div class="dial-messages">
+              <div class="dial-msg-wrap"><div class="dial-label client-l">Клиент</div><div class="dial-msg client">Здравствуйте. Слушайте, сейчас не актуально — занят, перезвоню сам.</div></div>
+            </div>
+            <div class="sh" style="margin-bottom:10px;">Твой ответ:</div>
+            <div class="dial-choices" id="dc-4-1">
+              <div class="dial-choice" onclick="selectDial(this,'4',1,'A')" id="dial-4-1-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Хорошо, понял — звоните когда удобно. До свидания!»
+                <div class="dial-feedback">Отпустил без выяснения причины. «Не актуально» ≠ отказ. Разговор без следующего шага — незавершённый разговор.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',1,'B')" id="dial-4-1-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Понял, не буду задерживать. Скажите только — это «занят прямо сейчас» или «проект отложился»? Чтобы понять когда лучше вернуться.»
+                <div class="dial-feedback">Правильно. Ты не давишь и не отпускаешь. Задаёшь один точный вопрос чтобы понять что стоит за «не актуально».</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',1,'C')" id="dial-4-1-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Я вижу что вы заполнили анкету неделю назад — вы же хотели подключиться. Что изменилось?»
+                <div class="dial-feedback">Слишком настойчиво. «Вы же хотели» — давление. Клиент сказал что занят, не нужно его упрекать.</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-4-1" onclick="dialNext('4',1)">Продолжить →</button>
+          </div>
+          <div id="dial-turn-4-2" style="display:none">
+            <div class="dial-messages" id="dial-msgs-4-2"></div>
+            <div class="sh" style="margin-bottom:10px;">Клиент отвечает — твой ход:</div>
+            <div class="dial-choices" id="dc-4-2">
+              <div class="dial-choice" onclick="selectDial(this,'4',2,'A')" id="dial-4-2-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Клиент: "Проект немного сдвинулся — планируем через месяц запустить."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Понял. Тогда позвоните нам за пару недель до запуска — поможем всё настроить.»
+                <div class="dial-feedback">Слишком пассивно. Клиент сам должен помнить позвонить — он не позвонит. Нужно зафиксировать дату когда ты перезвонишь сам.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',2,'B')" id="dial-4-2-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Клиент: "Проект немного сдвинулся — планируем через месяц запустить."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Понял, хорошо. Значит где-то через месяц — подскажите, в начале или конце? Чтобы я позвонил в нужный момент и помог подготовиться к запуску заранее.»
+                <div class="dial-feedback">Отлично. Ты зафиксировал примерную дату, взял инициативу на себя (перезвоню я) и дал клиенту ощущение что ты помогаешь, а не продаёшь.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',2,'C')" id="dial-4-2-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Клиент: "Проект немного сдвинулся — планируем через месяц запустить."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Ок, понял. Регистрация бесплатная — возможно стоит уже сейчас подать заявку на активацию чтобы не терять время?»
+                <div class="dial-feedback">Неплохая идея — подать заявку заранее. Но клиент только что сказал что у него сдвинулся проект. Давить на «давайте сделаем сейчас» без его готовности — не партнёрство.</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-4-2" onclick="dialNext('4',2)">Продолжить →</button>
+          </div>
+          <div id="dial-turn-4-3" style="display:none">
+            <div class="dial-messages" id="dial-msgs-4-3"></div>
+            <div class="sh" style="margin-bottom:10px;">Завершаешь разговор:</div>
+            <div class="dial-choices" id="dc-4-3">
+              <div class="dial-choice" onclick="selectDial(this,'4',3,'A')" id="dial-4-3-A">
+                <div class="dial-choice-letter">A</div>
+                <div>«Клиент: "Давайте в начале следующего месяца."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Договорились. Тогда позвоню вам [дата]. Если раньше появятся вопросы — пишите. Удачи с проектом!»
+                <div class="dial-feedback">Правильно. Конкретная дата, инициатива на тебе, дверь открыта для вопросов. Клиент знает что ждать и когда.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',3,'B')" id="dial-4-3-B">
+                <div class="dial-choice-letter">B</div>
+                <div>«Клиент: "Давайте в начале следующего месяца."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Отлично! Кстати, пока ждёте — может успеете проверить сайт по нашим требованиям? Там 5 пунктов, займёт 15 минут.»
+                <div class="dial-feedback">Хорошая идея! Даёшь клиенту конкретное полезное действие на период ожидания — и это ускорит модерацию когда придёт время. Плюс ты не давишь, а помогаешь подготовиться.</div></div>
+              </div>
+              <div class="dial-choice" onclick="selectDial(this,'4',3,'C')" id="dial-4-3-C">
+                <div class="dial-choice-letter">C</div>
+                <div>«Клиент: "Давайте в начале следующего месяца."»<br><br><em style="color:var(--muted);font-size:11px;">Твой ответ:</em><br>«Хорошо, я поставил напоминание. Всего доброго!»
+                <div class="dial-feedback">Нормально, но слабовато. Ты поставил напоминание — хорошо. Но можно было дать клиенту полезное действие на период ожидания (проверить сайт по требованиям).</div></div>
+              </div>
+            </div>
+            <button class="dial-next-btn" id="dial-next-4-3" onclick="dialFinish('4')">Завершить диалог →</button>
+          </div>
+        </div>
+        <div class="dial-finish" id="dial-finish-4">
+          <div class="dial-finish-title">🎯 Диалог завершён!</div>
+          <div class="dial-finish-desc">«Не актуально» — это не отказ. Выясни что стоит за этим → зафикси конкретную дату → возьми инициативу на себя (перезвоню я). Дай клиенту полезное действие на период ожидания.</div>
+          <button class="btn-primary" onclick="nxt(4)">Финальный тест →</button>
+        </div>
+      </div>
     </div>
+    <!-- КОНЕЦ МОДУЛЯ 4 -->
 
     <div class="module-card" id="mod-5" style="display:none">
       <div class="module-card-head">
@@ -1128,19 +1531,219 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 
 <script>
 // ── МУЛЬТИВЫБОР STATE ──
+// ── EMPLOYEE & STORAGE ──
+var EMPLOYEE_NAME = '';
+var SESSION_KEY = '';
+
+var QUESTION_LABELS = {
+  '1': ['Сравнение с банком по НДС','Обязательные требования (мульти)','Скорость подключения','Вопрос об интеграции','Клиент на ЮКассе','Требования к сайту (мульти)','Статус физлица'],
+  '2': ['BNPL для высокого чека','Уникальные методы (мульти)','Инокарты для СНГ','Рекурренты для подписки','Комиссия за попытку','Эквайринг без кассы'],
+  '3': ['Решение для самозанятого','ФН для ОСНО','ONLINE дорого','Маркировка в Робочеках','Состав 19200₽','Чеки от имени'],
+  '4': ['Обязательные требования (мульти)','Подготовка к звонку','Реакция на "не актуально"','Момент подключения кассы','Ошибка на платёжной','Требования к сайту (мульти)'],
+  '5': ['НДС vs банк','Касса для НПД','Интеграция платёжной','ФН для УСН','Обязательное требование','ONLINE дорого','Рекурренты','Физлица','ФН для ОСНО','После модерации']
+};
+
+function showNameScreen(){show('screen-name');}
+
+function startWithName(){
+  EMPLOYEE_NAME = document.getElementById('employee-name').value.trim();
+  if(EMPLOYEE_NAME.length < 2) return;
+  SESSION_KEY = 'session_' + Date.now();
+  startCourse();
+}
+
+function saveProgress(){
+  if(!EMPLOYEE_NAME) return;
+  var data = {
+    name: EMPLOYEE_NAME,
+    date: new Date().toISOString(),
+    scores: S.scores.slice(),
+    totals: S.totals.slice(),
+    ans: S.ans.map(function(m){return m.slice();}),
+    done: S.done.slice(),
+    sessionKey: SESSION_KEY
+  };
+  try {
+    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+    // remove old session for same name+key
+    all = all.filter(function(r){return r.sessionKey !== SESSION_KEY;});
+    all.push(data);
+    localStorage.setItem('rk_analytics', JSON.stringify(all));
+  } catch(e){}
+}
+
+// Add analytics link to start screen
+function maybeShowAnalyticsLink(){
+  try {
+    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+    if(all.length > 0){
+      var el = document.getElementById('analytics-link');
+      if(el) el.style.display = 'inline-flex';
+    }
+  } catch(e){}
+}
+
+function showAnalytics(){
+  show('screen-analytics');
+  renderAnalytics();
+}
+
+function renderAnalytics(filter){
+  try {
+    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+    // dedupe: keep latest per name
+    var byName = {};
+    all.forEach(function(r){ byName[r.name] = r; });
+    var records = Object.values(byName);
+    if(filter === 'fail') records = records.filter(function(r){ return r.scores[4] < 8; });
+    if(filter === 'pass') records = records.filter(function(r){ return r.scores[4] >= 8; });
+    
+    var container = document.getElementById('analytics-content');
+    if(records.length === 0){
+      container.innerHTML = '<div class="an-empty">Пока нет данных. Данные появятся после того как сотрудники пройдут курс.</div>';
+      return;
+    }
+    
+    // Summary
+    var total = records.length;
+    var passed = records.filter(function(r){return r.scores[4]>=8;}).length;
+    var avgScore = Math.round(records.reduce(function(s,r){return s+r.scores.reduce(function(a,b){return a+b;},0);},0) / total);
+    
+    // Find most common wrong questions
+    var wrongCount = {};
+    records.forEach(function(r){
+      r.ans.forEach(function(modAns, mi){
+        modAns.forEach(function(ans, qi){
+          if(ans === false){
+            var key = 'М'+(mi+1)+'В'+(qi+1);
+            wrongCount[key] = (wrongCount[key]||0) + 1;
+          }
+        });
+      });
+    });
+    var topWrong = Object.entries(wrongCount).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
+    
+    var html = '<div class="an-summary">';
+    html += '<div class="an-sum-item"><div class="an-sum-n">'+total+'</div><div class="an-sum-l">прошли курс</div></div>';
+    html += '<div class="an-sum-item"><div class="an-sum-n" style="color:var(--ok)">'+passed+'</div><div class="an-sum-l">сдали финальный</div></div>';
+    html += '<div class="an-sum-item"><div class="an-sum-n" style="color:var(--danger)">'+(total-passed)+'</div><div class="an-sum-l">не сдали</div></div>';
+    html += '<div class="an-sum-item"><div class="an-sum-n">'+avgScore+'</div><div class="an-sum-l">ср. балл (сумма)</div></div>';
+    html += '</div>';
+    
+    if(topWrong.length > 0){
+      html += '<div class="an-card" style="background:var(--danger-bg);border-color:rgba(217,53,71,0.2);">';
+      html += '<div class="an-err-title" style="color:var(--danger);">🔴 Самые частые ошибки по всей группе</div>';
+      topWrong.forEach(function(w){
+        var parts = w[0].replace('М','').replace('В',',').split(',');
+        var mi = parseInt(parts[0])-1, qi = parseInt(parts[1])-1;
+        var qLabel = (QUESTION_LABELS[''+(mi+1)] && QUESTION_LABELS[''+(mi+1)][qi]) || w[0];
+        html += '<div class="an-err-item"><strong>'+w[0]+'</strong> — '+qLabel+' <span style="color:var(--danger);">('+w[1]+' из '+total+' ошиблись)</span></div>';
+      });
+      html += '</div>';
+    }
+    
+    html += '<div class="an-filter">';
+    html += '<button class="an-filter-btn'+((!filter)?' active':'')+ '" onclick="renderAnalytics()">Все ('+total+')</button>';
+    html += '<button class="an-filter-btn'+((filter==="pass")?' active':'')+' " onclick="renderAnalytics(\'pass\')">Сдали ('+passed+')</button>';
+    html += '<button class="an-filter-btn'+((filter==="fail")?' active':'')+' " onclick="renderAnalytics(\'fail\')">Не сдали ('+(total-passed)+')</button>';
+    html += '</div>';
+    
+    var modNames = ['Кто мы','Продукты','Касса','Путь клиента','Финал'];
+    
+    records.sort(function(a,b){return new Date(b.date)-new Date(a.date);}).forEach(function(r){
+      var totalScore = r.scores.reduce(function(a,b){return a+b;},0);
+      var totalPoss = r.totals.reduce(function(a,b){return a+b;},0);
+      var passed5 = r.scores[4] >= 8;
+      var dateStr = new Date(r.date).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      
+      html += '<div class="an-card">';
+      html += '<div class="an-header"><div><div class="an-name">'+r.name+'</div><div class="an-date">'+dateStr+'</div></div>';
+      html += '<div class="an-score '+(passed5?'pass':'fail')+'">'+totalScore+'/'+totalPoss+' '+(passed5?'✓':'✗')+'</div></div>';
+      
+      html += '<div class="an-mods">';
+      r.scores.forEach(function(sc,mi){
+        var poss = r.totals[mi];
+        var pct = Math.round(sc/poss*100);
+        var color = pct>=80?'var(--ok)':pct>=60?'var(--amber)':'var(--danger)';
+        html += '<div class="an-mod"><div class="an-mod-n" style="color:'+color+'">'+sc+'/'+poss+'</div><div class="an-mod-l">'+modNames[mi]+'</div></div>';
+      });
+      html += '</div>';
+      
+      // Errors detail
+      var hasErrors = false;
+      r.ans.forEach(function(modAns, mi){
+        modAns.forEach(function(ans){if(ans===false)hasErrors=true;});
+      });
+      
+      if(hasErrors){
+        html += '<details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);padding:6px 0;">Разбор ошибок ▾</summary>';
+        html += '<div style="margin-top:8px;">';
+        r.ans.forEach(function(modAns, mi){
+          modAns.forEach(function(ans, qi){
+            if(ans === false){
+              var qLabel = (QUESTION_LABELS[''+(mi+1)] && QUESTION_LABELS[''+(mi+1)][qi]) || ('Вопрос '+(qi+1));
+              html += '<div class="an-err-item">';
+              html += '<div class="an-err-q"><strong>М'+(mi+1)+'В'+(qi+1)+'</strong> — '+qLabel+'</div>';
+              html += '<div class="an-err-chose">✗ Ответил неверно</div>';
+              html += '</div>';
+            }
+          });
+        });
+        html += '</div></details>';
+      } else {
+        html += '<div style="margin-top:8px;font-size:12px;color:var(--ok);">✓ Ошибок нет</div>';
+      }
+      html += '</div>';
+    });
+    
+    // Export button
+    html += '<div style="text-align:center;margin-top:16px;">';
+    html += '<button class="btn-secondary" onclick="exportCSV()">Экспорт в CSV</button>';
+    html += '</div>';
+    
+    container.innerHTML = html;
+  } catch(e){
+    document.getElementById('analytics-content').innerHTML = '<div class="an-empty">Ошибка загрузки данных.</div>';
+  }
+}
+
+function exportCSV(){
+  try {
+    var all = JSON.parse(localStorage.getItem('rk_analytics') || '[]');
+    var byName = {};
+    all.forEach(function(r){ byName[r.name] = r; });
+    var records = Object.values(byName);
+    var lines = ['Имя,Дата,М1,М2,М3,М4,М5,Итого,Финал сдан'];
+    records.forEach(function(r){
+      var date = new Date(r.date).toLocaleString('ru-RU');
+      var tot = r.scores.reduce(function(a,b){return a+b;},0);
+      var passed = r.scores[4]>=8?'Да':'Нет';
+      lines.push([r.name,date,r.scores[0],r.scores[1],r.scores[2],r.scores[3],r.scores[4],tot,passed].join(','));
+    });
+    var blob = new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href=url;a.download='rk_onboarding_results.csv';a.click();
+  } catch(e){}
+}
+
 var multiState={};
 
 var S={
   cur:1,unlocked:[1],done:[],
-  ans:[Array(7).fill(null),Array(6).fill(null),Array(6).fill(null),Array(5).fill(null),Array(10).fill(null)],
+  ans:[Array(7).fill(null),Array(6).fill(null),Array(6).fill(null),Array(6).fill(null),Array(10).fill(null)],
   scores:[0,0,0,0,0],
-  totals:[7,6,6,5,10],
-  pass:[5,4,5,4,8],
+  totals:[7,6,6,6,10],
+  pass:[5,4,5,5,8],
   steps:[[false,false,false,false],[false,false,false,false]],
-  dial:{'1':{step:1,chosen:{}},'2':{step:1,chosen:{}}}
+  dial:{'1':{step:1,chosen:{}},'2':{step:1,chosen:{}},'3':{step:1,chosen:{}},'4':{step:1,chosen:{}}}
 };
 
-function startCourse(){show('screen-course');upd();}
+function startCourse(){
+  show('screen-course');
+  upd();
+  setTimeout(maybeShowAnalyticsLink, 100);
+}
 function goStart(){show('screen-start');}
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
 
@@ -1274,6 +1877,7 @@ function chk(mn,total,pass){
   if(rb)rb.style.display=passed?'none':'inline-flex';
   document.getElementById('check-'+mn).disabled=true;
   res.scrollIntoView({behavior:'smooth',block:'center'});
+  if(passed) saveProgress();
   return passed;
 }
 
@@ -1337,14 +1941,20 @@ function checkCase(caseId,correctLetter){
   res.style.display='block';res.scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(function(){var n=document.getElementById('case-next-'+caseId);if(n)n.style.display='block';},600);
   var mod=parseInt(caseId);
-  var sn=document.getElementById('sn-'+mod+'-3');var sb=document.getElementById('sb-badge-'+mod+'-3');
+  var caseStep=(mod===4)?4:3;
+  var sn=document.getElementById('sn-'+mod+'-'+caseStep);var sb=document.getElementById('sb-badge-'+mod+'-'+caseStep);
   if(sn){sn.classList.remove('active','pending');sn.classList.add('done');sn.textContent='✓';}
   if(sb){sb.className='step-badge done-b';sb.textContent='Готово';}
 }
 
 // ── ДИАЛОГ ──
-var dialBest={'1':{1:'B',2:'B',3:'B'},'2':{1:'B',2:'A',3:'A'}};
-var dialClientMsg={'1':{2:'Да, продаю одежду онлайн, оборот небольшой — тысяч 200–300.',3:'Понятно, надо ещё подумать.'},'2':{2:'Да, бывает. Чек у нас 4–5 тысяч.',3:'Интересно. А сложно это технически подключить?'}};
+var dialBest={'1':{1:'B',2:'B',3:'B'},'2':{1:'B',2:'A',3:'A'},'3':{1:'B',2:'B',3:'A'},'4':{1:'B',2:'B',3:'B'}};
+var dialClientMsg={
+  '1':{2:'Да, продаю одежду онлайн, оборот небольшой — тысяч 200–300.',3:'Понятно, надо ещё подумать.'},
+  '2':{2:'Да, бывает. Чек у нас 4–5 тысяч.',3:'Интересно. А сложно это технически подключить?'},
+  '3':{2:'Кассы нет, не думал об этом.',3:'19 тысяч дороговато. Есть что-то бесплатное?'},
+  '4':{2:'Проект немного сдвинулся — планируем через месяц запустить.',3:'Давайте в начале следующего месяца.'}
+};
 
 function selectDial(el,dialId,turn,letter){
   var container=document.getElementById('dc-'+dialId+'-'+turn);
@@ -1393,7 +2003,8 @@ function dialFinish(dialId){
     var f=document.getElementById('dial-finish-'+dialId);
     if(f){f.style.display='block';f.scrollIntoView({behavior:'smooth',block:'center'});}
     var mod=parseInt(dialId);
-    var sn=document.getElementById('sn-'+mod+'-4');var sb=document.getElementById('sb-badge-'+mod+'-4');
+    var dialStep=(mod===4)?5:4;
+    var sn=document.getElementById('sn-'+mod+'-'+dialStep);var sb=document.getElementById('sb-badge-'+mod+'-'+dialStep);
     if(sn){sn.classList.remove('active','pending');sn.classList.add('done');sn.textContent='✓';}
     if(sb){sb.className='step-badge done-b';sb.textContent='Готово';}
   },400);
@@ -1402,6 +2013,7 @@ function dialFinish(dialId){
 // ── РЕЗУЛЬТАТ ──
 function showResult(){
   if(!S.done.includes(5))S.done.push(5);upd();
+  saveProgress();
   var fs=S.scores[4];var passed=fs>=8;
   var tot=S.scores.reduce(function(a,b){return a+b;},0);
   show('screen-result');
@@ -1410,13 +2022,18 @@ function showResult(){
   document.getElementById('res-desc').textContent=passed?'Ты знаешь продукт, тарифы, требования и путь клиента. Можно работать с клиентами!':'Пересдай финальный тест — нужно набрать 8 из 10.';
   document.getElementById('res-score').textContent=fs+'/10';
   document.getElementById('res-mods').textContent=S.done.length+'/5';
-  document.getElementById('res-total').textContent=tot+'/34';
-  var tots=[7,6,6,5,10];
+  document.getElementById('res-total').textContent=tot+'/35';
+  var tots=[7,6,6,6,10];
   for(var i=1;i<=5;i++){
     document.getElementById('rb'+i).textContent=S.scores[i-1]+'/'+tots[i-1];
     (function(idx){setTimeout(function(){document.getElementById('rbb'+idx).style.width=Math.round((S.scores[idx-1]/tots[idx-1])*100)+'%';},200+idx*80);})(i);
   }
 }
+
+// Init on page load
+window.addEventListener('load', function(){
+  maybeShowAnalyticsLink();
+});
 </script>
 </body>
 </html>
