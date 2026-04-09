@@ -318,7 +318,7 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
     </div>
     <button class="btn-primary" onclick="showNameScreen()">Начать курс →</button>
     <div style="margin-top:16px;">
-      <a id="analytics-link" href="#" onclick="showAnalytics();return false;" style="display:none;font-size:12px;color:var(--muted);text-decoration:none;gap:6px;" class="res-link">📊 Аналитика по сотрудникам (HR) →</a>
+      <a id="analytics-link" href="#" onclick="askHRPassword();return false;" style="display:none;font-size:12px;color:var(--muted);text-decoration:none;gap:6px;" class="res-link">📊 Аналитика по сотрудникам (HR) →</a>
     </div>
   </div>
 </div>
@@ -332,6 +332,21 @@ input:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(82,95,2
       <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px;">Это нужно чтобы твои результаты сохранились и HR-менеджер мог разобрать ошибки с тобой.</p>
       <input id="employee-name" type="text" placeholder="Имя и фамилия" style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:14px;color:var(--text);background:var(--white);outline:none;margin-bottom:12px;" oninput="document.getElementById('btn-start-named').disabled=this.value.trim().length<2">
       <button id="btn-start-named" class="btn-primary" style="width:100%;justify-content:center;" onclick="startWithName()" disabled>Начать обучение →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ПАРОЛЬ HR -->
+<div id="hr-password-modal" style="display:none;position:fixed;inset:0;background:rgba(24,32,51,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:var(--r);padding:32px;max-width:360px;width:90%;text-align:center;box-shadow:var(--shadow);">
+    <div style="font-size:32px;margin-bottom:12px;">🔒</div>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:6px;">Доступ для HR</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;">Введите пароль для просмотра аналитики</p>
+    <input id="hr-pwd-input" type="password" placeholder="Пароль" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:14px;color:var(--text);background:var(--white);outline:none;margin-bottom:8px;" onkeydown="if(event.key==='Enter')checkHRPassword()">
+    <div id="hr-pwd-error" style="color:var(--danger);font-size:12px;margin-bottom:8px;display:none;">Неверный пароль</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
+      <button class="btn-secondary" onclick="closeHRModal()">Отмена</button>
+      <button class="btn-primary" style="height:44px;padding:0 24px;" onclick="checkHRPassword()">Войти</button>
     </div>
   </div>
 </div>
@@ -2097,6 +2112,33 @@ function showResult(){
   for(var i=1;i<=5;i++){
     document.getElementById('rb'+i).textContent=S.scores[i-1]+'/'+tots[i-1];
     (function(idx){setTimeout(function(){document.getElementById('rbb'+idx).style.width=Math.round((S.scores[idx-1]/tots[idx-1])*100)+'%';},200+idx*80);})(i);
+  }
+}
+
+// ── HR PASSWORD ──
+var HR_PASSWORD = 'rk2026'; // ← смени пароль здесь
+
+function askHRPassword(){
+  var modal = document.getElementById('hr-password-modal');
+  modal.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('hr-pwd-input').focus(); }, 100);
+}
+
+function closeHRModal(){
+  document.getElementById('hr-password-modal').style.display = 'none';
+  document.getElementById('hr-pwd-input').value = '';
+  document.getElementById('hr-pwd-error').style.display = 'none';
+}
+
+function checkHRPassword(){
+  var val = document.getElementById('hr-pwd-input').value;
+  if(val === HR_PASSWORD){
+    closeHRModal();
+    showAnalytics();
+  } else {
+    document.getElementById('hr-pwd-error').style.display = 'block';
+    document.getElementById('hr-pwd-input').value = '';
+    document.getElementById('hr-pwd-input').focus();
   }
 }
 
